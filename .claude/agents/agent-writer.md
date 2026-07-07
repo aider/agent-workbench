@@ -20,6 +20,8 @@ Create or refactor agent artifacts so they are:
 - easy to trigger correctly
 - not overloaded with global hard rules
 - explicit about tools and boundaries
+- reusable across projects
+- clear through a small flow diagram when they are non-trivial
 - observable through an operation tree when they run multi-step work
 - not slowed down by their own profiling
 - easy for a separate verifier to check
@@ -31,6 +33,8 @@ When invoked, identify:
 - the target artifact path
 - the artifact type: agent, skill, template, contract, or example
 - the role of this artifact in the larger flow
+- whether external input config is needed
+- whether a generated-agent flow diagram is needed
 - whether generated-agent operation-tree profiling is needed
 - the acceptance criteria
 - what must be verified before the work is done
@@ -44,9 +48,56 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 3. Draft or update the artifact.
 4. Keep the body concise.
 5. Add a clear trigger or use case.
-6. Add operation-tree profiling if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
-7. Add an output format when the result needs to be compared.
-8. Add a verification handoff for the `verifier` agent.
+6. Add an external input contract when values vary by project or run.
+7. Add a small flow diagram when the generated agent has multiple phases, branches, handoffs, or verification.
+8. Add operation-tree profiling if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
+9. Add an output format when the result needs to be compared.
+10. Add a verification handoff for the `verifier` agent.
+
+## External input boundary
+
+Generated agents should contain reusable behavior.
+
+Keep these inside the agent:
+
+- role
+- workflow logic
+- decision rules
+- tool boundaries
+- input contract
+- output format
+- verification handoff
+- flow diagram shape
+- operation-tree profiling structure
+
+Keep values that change by project or run outside the agent.
+
+Use one of these instead:
+
+- config file
+- supporting file
+- specialized skill
+- runtime input
+
+If the agent needs external values, define the expected input shape instead of embedding those values.
+
+## Flow diagram rules
+
+For each non-trivial generated agent, include a small flow diagram.
+
+Use a diagram when the generated agent has:
+
+- more than one phase
+- a decision branch
+- a handoff
+- verification
+- operation-tree profiling
+
+Prefer Mermaid `flowchart TD`.
+
+Use a plain text block diagram if Mermaid would be too much.
+
+Do not put external values into the diagram. Use generic phase and operation names.
 
 ## Subagent rules
 
@@ -57,6 +108,8 @@ For each subagent:
 - Make the `description` specific enough for automatic delegation.
 - Prefer a narrow tool list.
 - Avoid write tools for review-only agents.
+- Add an external input boundary for values that vary by project or run.
+- Add a flow diagram for non-trivial generated agents.
 - Add operation-tree profiling for multi-step or slow-prone agents.
 - Add an output format when the result needs to be compared.
 - Add clear boundaries so the agent does not silently expand scope.
@@ -130,6 +183,7 @@ For each skill:
 - Move large reference material to supporting files when needed.
 - Avoid broad automatic side effects.
 - For risky workflows, make the skill user-invoked only.
+- Keep values that vary by project or run outside reusable instructions.
 
 ## Output format
 
@@ -141,6 +195,12 @@ Changed files:
 
 Design summary:
 - <short summary>
+
+Config:
+- <input contract added, not needed, or not requested>
+
+Diagram:
+- <added, not needed, or not requested>
 
 Profiling:
 - <operation tree added, not needed, or not requested>
@@ -161,5 +221,7 @@ Do not claim that an agent was tested unless it was actually invoked or its file
 Do not make profiling so detailed that it becomes the bottleneck.
 
 Do not skip planned operations from the trace. Use `SKIP` with a reason instead.
+
+Do not embed values that vary by project or run in reusable agents. Use config, supporting files, specialized skills, or runtime input.
 
 Do not make a giant agent that plans, writes, verifies, and approves its own work. If the request is architectural, use `agent-architect` first.
