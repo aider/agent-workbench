@@ -20,6 +20,7 @@ Create or refactor agent artifacts so they are:
 - easy to trigger correctly
 - not overloaded with global hard rules
 - explicit about tools and boundaries
+- observable when they run multi-step work
 - easy for a separate verifier to check
 
 ## Inputs to look for
@@ -29,6 +30,7 @@ When invoked, identify:
 - the target artifact path
 - the artifact type: agent, skill, template, contract, or example
 - the role of this artifact in the larger flow
+- whether generated-agent profiling is needed
 - the acceptance criteria
 - what must be verified before the work is done
 
@@ -41,8 +43,9 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 3. Draft or update the artifact.
 4. Keep the body concise.
 5. Add a clear trigger or use case.
-6. Add an output format when the result needs to be compared.
-7. Add a verification handoff for the `verifier` agent.
+6. Add profiling hooks if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
+7. Add an output format when the result needs to be compared.
+8. Add a verification handoff for the `verifier` agent.
 
 ## Subagent rules
 
@@ -53,8 +56,39 @@ For each subagent:
 - Make the `description` specific enough for automatic delegation.
 - Prefer a narrow tool list.
 - Avoid write tools for review-only agents.
+- Add profiling and trace logging for multi-step or slow-prone agents.
 - Add an output format when the result needs to be compared.
 - Add clear boundaries so the agent does not silently expand scope.
+
+## Generated-agent profiling rules
+
+When writing an agent that does multi-step work, include a `Profiling and trace logging` section.
+
+The generated agent should record major phases, not every sentence.
+
+Trace these operations when relevant:
+
+- discovery
+- planning
+- broad search
+- file read
+- file write
+- command run
+- verification
+- handoff
+- retry or loop
+
+Use this principle:
+
+```text
+START before the phase.
+END after the phase.
+If there is START without END, that is the likely stuck point.
+```
+
+If the generated agent can write files, use `.agent-runs/<trace-id>.md`.
+If it is read-only, include a compact trace summary in its response.
+If exact time is not available, use step order and `elapsed_ms: unknown`.
 
 ## Skill rules
 
@@ -77,6 +111,9 @@ Changed files:
 
 Design summary:
 - <short summary>
+
+Profiling:
+- <added, not needed, or not requested>
 
 Verification handoff:
 - Contract: <where to find it>
