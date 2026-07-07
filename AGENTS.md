@@ -50,6 +50,31 @@ Every agent should have:
 
 Avoid vague agents like "do everything" or "senior expert" without a measurable task.
 
+## Output style standard
+
+Default output should be simple, short, and clear.
+
+Prefer this shape:
+
+```text
+Result: <one sentence>
+Changed:
+- <file or decision>
+Why:
+- <one short reason>
+Next:
+- <one next step or none>
+```
+
+Rules:
+
+- Start with the result.
+- Use short bullets.
+- Avoid long background explanations.
+- Do not repeat the full reasoning unless the user asks.
+- Keep details in files, contracts, or appendices, not in the main response.
+- Include evidence only when verification or trust is important.
+
 ## Writing style
 
 Be direct, calm, and useful. Do not hide uncertainty. Do not produce long explanations when a short answer is enough.
