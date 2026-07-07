@@ -2,7 +2,7 @@
 
 A small workbench for designing AI agents without turning global instructions into a wall of hard rules.
 
-The goal is simple: let `agent-architect` decide the structure, keep stable project rules small, move repeatable procedures into skills, and make generated agents observable by default.
+The goal is simple: let `agent-architect` decide the structure, keep stable project rules small, move repeatable procedures into skills, and make generated agents observable by default with low-overhead profiling.
 
 ## Repository layout
 
@@ -43,7 +43,7 @@ Use this split instead:
 
 1. **Architect-flow skill** gives a short repeatable entry point.
 2. **Agent architect** decides the workflow structure and whether generated agents need profiling hooks.
-3. **Agent writer** creates or updates agents and adds built-in profiling to non-trivial generated agents.
+3. **Agent writer** creates or updates agents and adds low-overhead built-in profiling to non-trivial generated agents.
 4. **Agent-flow profiler** analyzes traces from generated agents when one is slow or stuck.
 5. **Performance profiler** investigates slow app, build, infra, or service behavior before fixes.
 6. **Verification contract** defines what must be true before the work is done.
@@ -96,6 +96,26 @@ This is slow:
 <paste symptom, timing, logs, trace, or file path>
 ```
 
+## Low-overhead profiling rule
+
+Generated-agent profiling must not become the bottleneck.
+
+Default behavior:
+
+- trace major phases only
+- keep trace entries in run notes while working
+- write one compact trace summary at the end
+- write `.agent-runs/<trace-id>.md` only for complex write-capable agents
+- do not write trace files after every operation
+- do not log every sentence or minor tool call
+
+Target size:
+
+```text
+normal run: 3 to 8 trace entries
+complex run: 8 to 20 trace entries
+```
+
 ## Generated-agent hang diagnosis rule
 
 If a generated agent hangs, inspect its trace.
@@ -140,7 +160,7 @@ Use `verify-change` when you need a reusable verification checklist.
 - Keep global instructions short.
 - Move long procedures into skills.
 - Move role-specific work into subagents.
-- Add built-in profiling to non-trivial generated agents.
+- Add low-overhead built-in profiling to non-trivial generated agents.
 - Profile slow app or service behavior before changing code.
 - Give every agent a clear trigger in `description`.
 - Give write-capable agents only the tools they need.
