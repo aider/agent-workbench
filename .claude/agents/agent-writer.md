@@ -20,7 +20,7 @@ Create or refactor agent artifacts so they are:
 - easy to trigger correctly
 - not overloaded with global hard rules
 - explicit about tools and boundaries
-- observable when they run multi-step work
+- observable through an operation tree when they run multi-step work
 - not slowed down by their own profiling
 - easy for a separate verifier to check
 
@@ -31,7 +31,7 @@ When invoked, identify:
 - the target artifact path
 - the artifact type: agent, skill, template, contract, or example
 - the role of this artifact in the larger flow
-- whether generated-agent profiling is needed
+- whether generated-agent operation-tree profiling is needed
 - the acceptance criteria
 - what must be verified before the work is done
 
@@ -44,7 +44,7 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 3. Draft or update the artifact.
 4. Keep the body concise.
 5. Add a clear trigger or use case.
-6. Add lightweight profiling hooks if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
+6. Add operation-tree profiling if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
 7. Add an output format when the result needs to be compared.
 8. Add a verification handoff for the `verifier` agent.
 
@@ -57,7 +57,7 @@ For each subagent:
 - Make the `description` specific enough for automatic delegation.
 - Prefer a narrow tool list.
 - Avoid write tools for review-only agents.
-- Add lightweight profiling and trace logging for multi-step or slow-prone agents.
+- Add operation-tree profiling for multi-step or slow-prone agents.
 - Add an output format when the result needs to be compared.
 - Add clear boundaries so the agent does not silently expand scope.
 
@@ -65,23 +65,36 @@ For each subagent:
 
 When writing an agent that does multi-step work, include a `Profiling and trace logging` section.
 
-Profiling must be low overhead.
+The generated agent must model its work as:
 
-Default approach:
+```text
+phase -> operation -> optional sub_operation
+```
 
-- trace major phases only
+Every planned operation must end with one final state:
+
+```text
+END | SKIP | ERROR
+```
+
+Rules:
+
+- define the operation tree at the start or during planning
+- do not silently drop planned operations
+- if an operation is skipped, record `SKIP` with a reason
+- record `START` before the operation begins
+- record `END`, `SKIP`, or `ERROR` when the operation finishes
+- if there is `START` without a final state, that is the likely stuck point
+
+Profiling must be low overhead:
+
 - keep trace entries in run notes while working
 - write one compact trace summary at the end
 - write `.agent-runs/<trace-id>.md` only for complex write-capable agents
 - do not write trace files after every operation
-- do not log every sentence or minor tool call
+- do not log every sentence or minor internal step
 
-Target trace size:
-
-- normal run: 3 to 8 entries
-- complex run: 8 to 20 entries
-
-Trace these operations when relevant:
+Track these operation types when relevant:
 
 - discovery
 - planning
@@ -92,18 +105,20 @@ Trace these operations when relevant:
 - verification
 - handoff
 - retry or loop
+- summarize result
 
-Use this principle:
+The final output must identify:
 
-```text
-START before the phase.
-END after the phase.
-If there is START without END, that is the likely stuck point.
-```
+- phase count
+- operation count
+- completed count
+- skipped count
+- failed count
+- slowest phase when timing is known
+- slowest operation when timing is known
+- stuck point if one exists
 
-If the generated agent can write files and the workflow is complex, write one trace file near the end.
-If it is read-only, include a compact trace summary in its response.
-If exact time is not available, use step order and `elapsed_ms: unknown`.
+If exact time is not available, use step order and `elapsed_ms: unknown`, but still report counts and final states.
 
 ## Skill rules
 
@@ -128,7 +143,7 @@ Design summary:
 - <short summary>
 
 Profiling:
-- <added, not needed, or not requested>
+- <operation tree added, not needed, or not requested>
 
 Verification handoff:
 - Contract: <where to find it>
@@ -144,5 +159,7 @@ Open risks:
 Do not claim that an agent was tested unless it was actually invoked or its files were checked against a concrete contract.
 
 Do not make profiling so detailed that it becomes the bottleneck.
+
+Do not skip planned operations from the trace. Use `SKIP` with a reason instead.
 
 Do not make a giant agent that plans, writes, verifies, and approves its own work. If the request is architectural, use `agent-architect` first.
