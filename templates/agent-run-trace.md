@@ -1,109 +1,140 @@
-# Agent Run Trace Template
+# Generated Agent Operation Trace Template
 
-Use this template to debug a slow or stuck agent workflow.
+Use this template to debug a slow or stuck generated agent.
 
 ## Key idea
 
-Every major phase writes a `START` and `END` entry.
+A generated agent should record an operation tree:
 
-If the run hangs, the likely stuck place is the last `START` entry without a matching `END`.
+```text
+phase -> operation -> optional sub_operation
+```
+
+Every planned operation must finish as one of:
+
+```text
+END | SKIP | ERROR
+```
+
+If the run hangs, the likely stuck place is the last `START` without `END`, `SKIP`, or `ERROR`.
 
 ## Trace file path
 
-Use this path pattern:
+Use this path only for complex write-capable agents:
 
 ```text
 .agent-runs/<trace-id>.md
 ```
 
-Example:
-
-```text
-.agent-runs/2026-07-06-agent-flow-001.md
-```
+For normal runs, a compact final trace summary is enough.
 
 ## Trace entry format
 
 ```text
 trace_id: <id>
-event: START | END | SKIP | ERROR
+op_id: <phase.operation.number>
+parent_id: <parent op_id or none>
+level: phase | operation | sub_operation
+event: PLAN | START | END | SKIP | ERROR
 agent: <agent-name>
 phase: <phase-name>
 operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
-status: running | success | failed | skipped
+status: planned | running | success | skipped | failed
 ```
 
 ## Minimal example
 
 ```text
 trace_id: run-001
-event: START
-agent: agent-architect
+op_id: 1
+parent_id: none
+level: phase
+event: PLAN
+agent: project-investigator
 phase: discovery
-operation: scan repo files
+operation: discover project files
 time: step-01
 elapsed_ms: unknown
-evidence: Glob **/*.md
+evidence: planned
+status: planned
+
+trace_id: run-001
+op_id: 1.1
+parent_id: 1
+level: operation
+event: START
+agent: project-investigator
+phase: discovery
+operation: scan src files
+time: step-02
+elapsed_ms: unknown
+evidence: Glob src/**/*.java
 status: running
 
 trace_id: run-001
+op_id: 1.1
+parent_id: 1
+level: operation
 event: END
-agent: agent-architect
+agent: project-investigator
 phase: discovery
-operation: scan repo files
-time: step-02
+operation: scan src files
+time: step-03
 elapsed_ms: unknown
-evidence: found 12 files
+evidence: found 42 files
 status: success
 
 trace_id: run-001
+op_id: 2.1
+parent_id: 2
+level: operation
 event: START
-agent: agent-writer
-phase: write
-operation: update agent file
-time: step-03
+agent: project-investigator
+phase: analysis
+operation: inspect dependencies
+time: step-04
 elapsed_ms: unknown
-evidence: .claude/agents/example.md
+evidence: Grep Feign|WebClient|RestTemplate
 status: running
 ```
 
 If the trace stops here, the likely stuck operation is:
 
 ```text
-agent-writer / write / update agent file
+project-investigator / analysis / inspect dependencies
 ```
 
-## Required phases for generated agents
-
-At minimum, generated agents should trace:
-
-- discovery
-- planning
-- file read
-- file write
-- command run
-- verification
-- handoff
-
-## Debug rule
-
-When diagnosing a slow run:
-
-1. Find the latest trace file.
-2. Find the last `START` entry.
-3. Check whether it has a matching `END` entry.
-4. If not, report that phase as the likely stuck point.
-5. If all phases have `END`, compare elapsed time and repeated operations.
-
-## Short diagnosis format
+## Required final summary
 
 ```text
-Result: Likely stuck at <agent>/<phase>/<operation>.
-Evidence:
-- Last START without END: <trace entry>
-Next:
-- Inspect or split this operation.
+Trace:
+- trace_id: <id or none>
+- phases: <count>
+- operations: <count>
+- completed: <count>
+- skipped: <count>
+- failed: <count>
+- slowest phase: <phase or unknown>
+- slowest operation: <operation or unknown>
+- stuck point: <last START without END/SKIP/ERROR or none>
 ```
+
+## Required phase table
+
+```text
+| Phase | Operations | Completed | Skipped | Failed | Elapsed |
+|---|---:|---:|---:|---:|---:|
+| discovery | 3 | 3 | 0 | 0 | unknown |
+| analysis | 4 | 3 | 0 | 0 | unknown |
+```
+
+## Low-overhead rule
+
+- Keep trace entries in run notes while working.
+- Write one compact trace summary at the end.
+- Write `.agent-runs/<trace-id>.md` only for complex write-capable agents.
+- Do not write trace files after every operation.
+- Do not log every sentence or minor internal step.
