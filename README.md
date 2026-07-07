@@ -11,7 +11,8 @@ AGENTS.md                              Project operating rules for agents
 .claude/agents/agent-architect.md      Main entry point for messy workflows
 .claude/agents/agent-writer.md         Writes specific agents, skills, templates, and contracts
 .claude/agents/verifier.md             Verifies changes against a contract
-skills/verify-change/SKILL.md          Reusable verification workflow
+.claude/skills/architect-flow/SKILL.md Project skill for turning messy workflows into agent flows
+skills/verify-change/SKILL.md          Shared verification workflow
 
 templates/
   agent-template.md                    Template for a new subagent
@@ -30,11 +31,12 @@ Do not fix agent reliability by adding more and more global rules.
 
 Use this split instead:
 
-1. **Agent architect** decides the workflow structure.
-2. **Agent writer** creates or updates specific artifacts.
-3. **Verification contract** defines what must be true before the work is done.
-4. **Verifier** checks the result and reports evidence.
-5. **Skills** capture repeatable procedures so they do not live in every prompt.
+1. **Architect-flow skill** gives a short repeatable entry point.
+2. **Agent architect** decides the workflow structure.
+3. **Agent writer** creates or updates specific artifacts.
+4. **Verification contract** defines what must be true before the work is done.
+5. **Verifier** checks the result and reports evidence.
+6. **Skills** capture repeatable procedures so they do not live in every prompt.
 
 ## Quick start
 
@@ -46,7 +48,16 @@ cd agent-workbench
 claude
 ```
 
-Start with `agent-architect`:
+Use the project skill:
+
+```text
+/architect-flow
+
+Here is my messy workflow:
+<paste workflow>
+```
+
+Or call the architect directly:
 
 ```text
 Use agent-architect.
@@ -63,6 +74,8 @@ Prepare verification criteria.
 
 ## When to use each piece
 
+Use `/architect-flow` when you want the shortest repeatable entry point.
+
 Use `agent-architect` when the workflow is unclear, too large, or needs splitting.
 
 Use `agent-writer` only after the architecture is known and a specific file needs to be written.
@@ -73,9 +86,9 @@ Use `verify-change` when you need a reusable verification checklist.
 
 ## Skill installation note
 
-This repo keeps shared skills under `skills/` as source files. Claude Code project skills normally live under `.claude/skills/<skill-name>/SKILL.md`.
+This repo includes `.claude/skills/architect-flow/SKILL.md` as a project skill, so Claude Code can expose it as `/architect-flow` from this repository.
 
-To use the `verify-change` skill directly in this project, copy or symlink it:
+This repo also keeps shared skills under `skills/` as source files. To use the shared `verify-change` skill directly in this project, copy or symlink it:
 
 ```bash
 mkdir -p .claude/skills
@@ -106,9 +119,10 @@ Copy-Item -Recurse skills\verify-change .claude\skills\verify-change
 
 This version gives you a minimal agent architecture workbench:
 
+- an architect-flow skill
 - an architect agent
 - a writer agent
 - a verifier agent
-- one verification skill
+- one shared verification skill
 - templates for agents, flows, short output, and verification contracts
 - examples for simple and messy workflows
