@@ -4,16 +4,31 @@ These rules apply to this repository.
 
 ## Purpose
 
-This repo is for designing agents, skills, and verification contracts. The main goal is to reduce instruction overload by moving repeated workflows into focused files.
+This repo is for designing generated agents, skills, templates, and verification contracts.
+
+The main goal is to reduce instruction overload by moving repeated workflows into focused artifacts and making non-trivial generated agents observable through operation-tree profiling.
+
+## Core flow
+
+```text
+/architect-flow -> agent-architect -> agent-writer -> verifier
+```
+
+For a slow or stuck generated agent:
+
+```text
+generated agent trace -> agent-flow-profiler
+```
 
 ## How to work in this repo
 
 1. Understand the requested workflow before editing files.
 2. Put persistent project guidance in `AGENTS.md` only when it applies broadly.
-3. Put repeatable procedures in `skills/`.
+3. Put repeatable procedures in skills.
 4. Put reusable structure in `templates/`.
 5. Put Claude Code project subagents in `.claude/agents/`.
 6. Prefer small, composable agents over one large agent.
+7. Add operation-tree profiling to non-trivial generated agents.
 
 ## Definition of done
 
@@ -39,7 +54,7 @@ When verifying a change:
 
 ## Agent design standard
 
-Every agent should have:
+Every generated agent should have:
 
 - a specific job
 - a clear `description` trigger
@@ -47,8 +62,33 @@ Every agent should have:
 - explicit boundaries
 - an output format
 - a verification or handoff step
+- operation-tree profiling when the agent is non-trivial
 
 Avoid vague agents like "do everything" or "senior expert" without a measurable task.
+
+## Operation-tree profiling standard
+
+A non-trivial generated agent is one that has phases, operations, tool calls, file scans, commands, handoffs, loops, retries, or verification.
+
+It should model work as:
+
+```text
+phase -> operation -> optional sub_operation
+```
+
+Every planned operation must finish as one of:
+
+```text
+END | SKIP | ERROR
+```
+
+Rules:
+
+- Do not silently drop planned operations.
+- Use `SKIP` with a short reason when an operation is not executed.
+- The likely stuck point is the last `START` without `END`, `SKIP`, or `ERROR`.
+- Keep profiling low-overhead by batching trace entries and writing a compact summary at the end.
+- Do not log every sentence or minor internal step.
 
 ## Output style standard
 
