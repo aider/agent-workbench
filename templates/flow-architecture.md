@@ -16,6 +16,9 @@ What is going wrong now?
 - [ ] agent skips verification
 - [ ] agent asks for too many confirmations
 - [ ] one prompt mixes planning, writing, and reviewing
+- [ ] reusable logic is mixed with values that vary by project or run
+- [ ] generated-agent flow is hard to understand without a diagram
+- [ ] generated agent is slow or hard to debug
 - [ ] context gets polluted by logs or search results
 - [ ] different steps need different tools
 - [ ] user no longer trusts the result
@@ -26,23 +29,80 @@ What is going wrong now?
 | Instruction type | Artifact | Reason |
 |---|---|---|
 | Stable project-wide rule | `AGENTS.md` | Always relevant |
-| Repeatable procedure | `skills/<name>/SKILL.md` | Load only when needed |
+| Repeatable procedure | skill | Load only when needed |
 | Role-specific work | `.claude/agents/<name>.md` | Own context and tools |
+| Values that vary by project or run | config, supporting file, specialized skill, or runtime input | Keep reusable agent generic |
+| Flow shape | `templates/generated-agent-flow-diagram.md` or agent section | Makes the algorithm visible |
+| Trace shape | `templates/agent-run-trace.md` or agent section | Makes slow or stuck runs diagnosable |
 | Output shape | `templates/<name>.md` | Reusable structure |
 | Done criteria | `templates/verification-contract.md` or local contract | Evidence-based verification |
-| Deterministic check | `scripts/<name>` or documented command | More reliable than prose |
+| Deterministic check | script or documented command | More reliable than prose |
 
-## Proposed flow
+## Proposed core flow
 
 ```text
-<agent or skill> -> <agent or skill> -> <verifier>
+agent-architect -> agent-writer -> verifier
+```
+
+If a generated agent later runs slowly or gets stuck:
+
+```text
+generated agent trace -> agent-flow-profiler
+```
+
+## External input boundary
+
+Reusable generated agent logic:
+
+```text
+<what stays inside the agent>
+```
+
+External inputs:
+
+```text
+<what comes from config, supporting file, specialized skill, or runtime input>
+```
+
+## Generated-agent flow diagram
+
+Use Mermaid when useful:
+
+```mermaid
+flowchart TD
+  A[Input] --> B[Phase 1]
+  B --> C{Decision}
+  C -- Option A --> D[Phase 2]
+  C -- Option B --> E[Load external input]
+  E --> D
+  D --> F[Verify]
+  F --> G[Output]
+  B -. trace .-> T[Operation-tree trace]
+  D -. trace .-> T
+  F -. trace .-> T
+```
+
+Or use a plain text diagram.
+
+## Operation-tree profiling
+
+Generated agents should model work as:
+
+```text
+phase -> operation -> optional sub_operation
+```
+
+Every planned operation must finish as:
+
+```text
+END | SKIP | ERROR
 ```
 
 ## Subagents
 
-| Agent | Role | Tools | Why separate |
-|---|---|---|---|
-| `<name>` | `<role>` | `<tools>` | `<reason>` |
+| Agent | Role | Tools | Config boundary | Diagram | Profiling | Why separate |
+|---|---|---|---|---|---|---|
+| `<name>` | `<role>` | `<tools>` | `<source>` | yes/no | yes/no | `<reason>` |
 
 ## Skills
 
@@ -70,6 +130,9 @@ What is going wrong now?
 The architecture is acceptable when:
 
 - each artifact has one clear responsibility
+- reusable logic is separated from values that vary by project or run
+- non-trivial generated agents have a small flow diagram
+- non-trivial generated agents have operation-tree profiling
 - no single agent both writes and final-approves its own work
 - long procedures are not placed in global instructions
 - verification criteria are explicit
