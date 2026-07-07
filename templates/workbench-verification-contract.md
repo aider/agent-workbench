@@ -23,7 +23,7 @@ generated agent trace -> agent-flow-profiler
 | ID | Criterion | Required evidence |
 |---|---|---|
 | AC1 | README describes the small core flow | `README.md` shows the required core flow |
-| AC2 | README layout includes config and diagram templates | README lists `generated-agent-config.md` and `generated-agent-flow-diagram.md` |
+| AC2 | README layout includes all core examples and templates | README lists config, diagram, profiling, messy-flow, first-request, and hang-debug examples |
 | AC3 | AGENTS includes the core architecture standards | `AGENTS.md` mentions external input boundary, flow diagrams, and operation-tree profiling |
 | AC4 | Architect owns decomposition | `agent-architect.md` says the user does not provide decomposition rules |
 | AC5 | Architect owns external input boundaries | `agent-architect.md` defines external input boundary decisions |
@@ -55,12 +55,14 @@ AGENTS.md
 .claude/agents/verifier.md
 .claude/skills/architect-flow/SKILL.md
 .claude/skills/instrument-generated-agent/SKILL.md
+skills/verify-change/SKILL.md
 templates/agent-template.md
 templates/agent-run-trace.md
 templates/generated-agent-config.md
 templates/generated-agent-flow-diagram.md
 templates/flow-architecture.md
 templates/verification-contract.md
+examples/agent-flow-hang-debug.md
 examples/first-agent-request.md
 examples/generated-agent-profiling.md
 examples/messy-workflow-to-agent-flow.md
