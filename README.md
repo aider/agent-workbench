@@ -8,6 +8,7 @@ The core goal is simple: create focused reusable agents from messy workflows, re
 
 ```text
 AGENTS.md                                      Project operating rules
+INSTALL.md                                    Global Claude Code install guide
 REVIEW.md                                      Short entrypoint for reviewing existing external agent flows
 .claude/agents/agent-architect.md              Designs the generated-agent architecture
 .claude/agents/agent-flow-reviewer.md          Reviews existing external agent flows before rewrite
@@ -38,6 +39,16 @@ examples/
   first-agent-request.md                       Simple agent creation example
   generated-agent-profiling.md                 Example for profiling agents created by the workbench
   messy-workflow-to-agent-flow.md              Example where architect decides the split
+```
+
+## Install globally
+
+See `INSTALL.md`.
+
+Minimal prompt:
+
+```text
+Install Agent Workbench globally from https://github.com/aider/agent-workbench.
 ```
 
 ## Core flow

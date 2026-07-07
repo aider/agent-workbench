@@ -68,6 +68,12 @@ visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
 | AC32 | Fixer workflow exists | `agent-run-fixer.md` identifies the previous agent/run before fixing, uses visible chat context if available, verifies against repository evidence, and does not rely only on hidden chat history |
 | AC33 | Fixer routing is documented | `AGENTS.md` routes "Fix this" style generated-agent failures to `agent-run-fixer.md` and `README.md` documents the simple `Fix this.` UX |
 | AC34 | Fixer handles command and script failures | `agent-run-fixer.md` captures exact command and error when visible, classifies command usage failures, checks source of truth before fixing, avoids guessing command options, fixes the smallest root cause, and reruns the narrowest safe verification command |
+| AC35 | Install guide exists | `INSTALL.md` exists and `README.md` points to it |
+| AC36 | Install prompt exists | `INSTALL.md` includes a ready-to-paste prompt for installing globally from the GitHub repo |
+| AC37 | Install paths use official Claude Code personal locations | `INSTALL.md` uses `~/.claude/agents/` and `~/.claude/skills/<skill-name>/SKILL.md` |
+| AC38 | Install safety is documented | `INSTALL.md` warns about conflicts and overwrites, requires inspection, conflict detection, backup or skip behavior, and verification after copying |
+| AC39 | Install lifecycle is documented | `INSTALL.md` includes update, verify, uninstall, and restart guidance |
+| AC40 | Install scope is bounded | `INSTALL.md` says not to install examples or templates globally as agents or skills unless needed at runtime |
 
 ## Manual checks
 
@@ -76,6 +82,7 @@ Check these files:
 ```text
 README.md
 AGENTS.md
+INSTALL.md
 REVIEW.md
 .claude/agents/agent-architect.md
 .claude/agents/agent-flow-reviewer.md
