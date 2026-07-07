@@ -6,7 +6,7 @@ These rules apply to this repository.
 
 This repo is for designing generated agents, skills, templates, and verification contracts.
 
-The main goal is to reduce instruction overload by moving repeated workflows into focused artifacts and making non-trivial generated agents observable through operation-tree profiling.
+The main goal is to reduce instruction overload by moving repeated workflows into focused artifacts, keeping reusable agent logic separate from external inputs, showing non-trivial generated-agent flows with small diagrams, and making non-trivial generated agents observable through operation-tree profiling.
 
 ## Core flow
 
@@ -28,7 +28,39 @@ generated agent trace -> agent-flow-profiler
 4. Put reusable structure in `templates/`.
 5. Put Claude Code project subagents in `.claude/agents/`.
 6. Prefer small, composable agents over one large agent.
-7. Add operation-tree profiling to non-trivial generated agents.
+7. Keep reusable agent logic separate from external inputs.
+8. Add a flow diagram to non-trivial generated agents.
+9. Add operation-tree profiling to non-trivial generated agents.
+
+## External input boundary
+
+Generated agents should contain reusable behavior.
+
+Values that vary by project or run should stay outside reusable agent instructions.
+
+Keep these inside generated agents:
+
+- role
+- workflow logic
+- decision rules
+- tool boundaries
+- input contract
+- output format
+- verification handoff
+- flow diagram shape
+- operation-tree profiling structure
+
+Keep these outside generated agents:
+
+- variable values
+- lookup terms
+- file locations
+- command strings
+- labels
+- runtime settings
+- reference records
+
+Use config files, supporting files, specialized skills, or runtime input for those values.
 
 ## Definition of done
 
@@ -62,9 +94,19 @@ Every generated agent should have:
 - explicit boundaries
 - an output format
 - a verification or handoff step
+- an external input boundary
+- a flow diagram when the agent is non-trivial
 - operation-tree profiling when the agent is non-trivial
 
 Avoid vague agents like "do everything" or "senior expert" without a measurable task.
+
+## Flow diagram standard
+
+A non-trivial generated agent should have a small diagram when it has more than one meaningful phase, branch, handoff, verification step, or operation-tree trace.
+
+The diagram should show input, phases, decisions, handoffs, verification, output, and where trace is recorded.
+
+Use generic phase and operation names. Do not put external values into the diagram.
 
 ## Operation-tree profiling standard
 
