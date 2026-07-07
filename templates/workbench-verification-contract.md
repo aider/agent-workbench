@@ -68,12 +68,19 @@ visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
 | AC32 | Fixer workflow exists | `agent-run-fixer.md` identifies the previous agent/run before fixing, uses visible chat context if available, verifies against repository evidence, and does not rely only on hidden chat history |
 | AC33 | Fixer routing is documented | `AGENTS.md` routes "Fix this" style generated-agent failures to `agent-run-fixer.md` and `README.md` documents the simple `Fix this.` UX |
 | AC34 | Fixer handles command and script failures | `agent-run-fixer.md` captures exact command and error when visible, classifies command usage failures, checks source of truth before fixing, avoids guessing command options, fixes the smallest root cause, and reruns the narrowest safe verification command |
-| AC35 | Install guide exists | `INSTALL.md` exists and `README.md` points to it |
-| AC36 | Install prompt exists | `INSTALL.md` includes a ready-to-paste prompt for installing globally from the GitHub repo |
-| AC37 | Install paths use official Claude Code personal locations | `INSTALL.md` uses `~/.claude/agents/` and `~/.claude/skills/<skill-name>/SKILL.md` |
-| AC38 | Install safety is documented | `INSTALL.md` warns about conflicts and overwrites, requires inspection, conflict detection, backup or skip behavior, and verification after copying |
-| AC39 | Install lifecycle is documented | `INSTALL.md` includes update, verify, uninstall, and restart guidance |
-| AC40 | Install scope is bounded | `INSTALL.md` says not to install examples or templates globally as agents or skills unless needed at runtime |
+| AC35 | Fixer checks root-cause artifacts before downstream fixes | `agent-run-fixer.md` requires inspecting likely upstream/root-cause artifacts before proposing or applying fixes, before calling fixes safe, ready, proven, or low-risk, and before editing downstream implementation files |
+| AC36 | Fixer prefers producer/root-cause fixes | `agent-run-fixer.md` prefers producer/root-cause fixes over downstream patches and allows downstream guards only with explicit evidence and reason |
+| AC37 | Fixer responds to root-cause pushback | `agent-run-fixer.md` treats user pushback such as "did you read the agent?" as a signal to stop and inspect the likely root-cause artifact |
+| AC38 | Install guide exists | `INSTALL.md` exists and `README.md` points to it |
+| AC39 | Install prompt exists | `INSTALL.md` includes a ready-to-paste prompt for installing globally from the GitHub repo |
+| AC40 | Install paths use official Claude Code personal locations | `INSTALL.md` uses `~/.claude/agents/` and `~/.claude/skills/<skill-name>/SKILL.md` |
+| AC41 | Install safety is documented | `INSTALL.md` warns about conflicts and overwrites, requires inspection, conflict detection, backup or skip behavior, and verification after copying |
+| AC42 | Install lifecycle is documented | `INSTALL.md` includes update, verify, uninstall, and restart guidance |
+| AC43 | Install scope is bounded | `INSTALL.md` says not to install examples or templates globally as agents or skills unless needed at runtime |
+| AC44 | Update prompt exists | `INSTALL.md` includes a ready-to-paste prompt for updating an Agent Workbench global install |
+| AC45 | Update scope is bounded | `INSTALL.md` says updates only replace Agent Workbench-owned files and directories |
+| AC46 | Update safety is documented | `INSTALL.md` says not to delete the whole `~/.claude/agents` or `~/.claude/skills`, backs up changed files before replacing, and stops when ownership is unclear |
+| AC47 | README mentions update prompt | `README.md` mentions `Update Agent Workbench global install.` |
 
 ## Manual checks
 

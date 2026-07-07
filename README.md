@@ -51,6 +51,12 @@ Minimal prompt:
 Install Agent Workbench globally from https://github.com/aider/agent-workbench.
 ```
 
+Update prompt:
+
+```text
+Update Agent Workbench global install.
+```
+
 ## Core flow
 
 ```text

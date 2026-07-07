@@ -61,6 +61,37 @@ For a safer manual install, use `cp -n`, compare files first, or copy to a times
 
 ## Update Existing Install
 
+## Update Prompt
+
+Paste this into Claude Code:
+
+```text
+Update Agent Workbench global install from https://github.com/aider/agent-workbench.
+Use official Claude Code personal configuration locations.
+Update only Agent Workbench-owned files:
+- `~/.claude/agents/agent-architect.md`
+- `~/.claude/agents/agent-flow-profiler.md`
+- `~/.claude/agents/agent-flow-reviewer.md`
+- `~/.claude/agents/agent-run-fixer.md`
+- `~/.claude/agents/agent-writer.md`
+- `~/.claude/agents/verifier.md`
+- `~/.claude/skills/architect-flow`
+- `~/.claude/skills/instrument-generated-agent`
+- `~/.claude/skills/verify-change`
+Before replacing:
+1. fetch or clone the latest repo
+2. inspect the repo layout
+3. compare installed files with repo files
+4. detect local modifications
+5. show what will be replaced
+6. back up changed installed files before replacing them
+Do not overwrite unrelated personal agents or skills.
+After replacing:
+1. verify installed files exist
+2. list installed Agent Workbench agents and skills
+3. tell me whether Claude Code needs restart
+```
+
 1. Pull or re-clone the latest Agent Workbench.
 2. Compare installed files with the new repo files.
 3. Back up changed local files before replacing them.
@@ -68,6 +99,10 @@ For a safer manual install, use `cp -n`, compare files first, or copy to a times
 5. Verify installed files after copying.
 
 Do not overwrite unrelated personal agents or skills.
+
+Do not update by deleting the whole `~/.claude/agents` or `~/.claude/skills` directory.
+
+If a file name conflict exists and ownership is unclear, stop and ask.
 
 ## Verify Install
 
@@ -116,6 +151,10 @@ Review each path before deleting if you have customized installed files.
 - Show what will be copied before copying.
 - Detect name conflicts.
 - Do not overwrite unrelated user files.
+- Do not update by deleting the whole `~/.claude/agents` or `~/.claude/skills` directory.
+- Replace only known Agent Workbench-owned files and directories.
+- Back up installed files before replacing if they differ.
+- If a file name conflict exists and ownership is unclear, stop and ask.
 - Back up or skip conflicts unless they are clearly older Agent Workbench files.
 - Preserve skill directories and supporting files.
 - Skills may be symlinked as skill-name directories, but copying is simpler and easier to audit.

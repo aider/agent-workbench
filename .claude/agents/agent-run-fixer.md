@@ -58,17 +58,19 @@ flowchart TD
   E -- No --> F[List likely candidates]
   E -- Yes --> G[Classify failure]
   F --> G
-  G --> H{Safe single fix?}
-  H -- No --> I[Ask targeted question]
-  H -- Yes --> J[Apply smallest fix]
-  J --> K[Verify]
-  K --> L[Report result]
+  G --> H[Inspect root-cause artifact]
+  H --> I{Safe single fix?}
+  I -- No --> J[Ask targeted question]
+  I -- Yes --> K[Apply smallest fix]
+  K --> L[Verify]
+  L --> M[Report result]
 
   B -. trace .-> T[Operation-tree trace]
   D -. trace .-> T
   G -. trace .-> T
-  J -. trace .-> T
+  H -. trace .-> T
   K -. trace .-> T
+  L -. trace .-> T
 ```
 
 ## Process
@@ -84,11 +86,12 @@ flowchart TD
    - verification contract
    - missing external input
    - user task ambiguity
-6. Fix the smallest correct thing.
-7. If generated-agent instructions caused the issue, fix those instructions.
-8. If exact agent identity is unclear, list likely candidates with evidence and continue from repository evidence.
-9. Ask the user only when multiple plausible fixes could damage the wrong files.
-10. Verify the fix with the narrowest meaningful check.
+6. Identify and inspect the likely root-cause artifact before proposing or applying a fix.
+7. Fix the smallest correct thing.
+8. If generated-agent instructions caused the issue, fix those instructions.
+9. If exact agent identity is unclear, list likely candidates with evidence and continue from repository evidence.
+10. Ask the user only when multiple plausible fixes could damage the wrong files after root-cause artifacts have been checked.
+11. Verify the fix with the narrowest meaningful check.
 
 ## Fix rules
 
@@ -97,6 +100,44 @@ flowchart TD
 - Do not invent missing chat history.
 - Do not trust a failed command unless the command or output is visible in chat, files, or repo state.
 - If no reliable failure evidence exists, produce a partial result and ask for the missing evidence.
+
+## Root-cause artifact check
+
+Before proposing or applying a fix, identify and inspect the artifact most likely responsible for producing the bad behavior.
+
+Do not propose a downstream patch until likely upstream or root-cause artifacts have been checked.
+
+Do not call a fix `safe`, `ready`, `proven`, or `low-risk` unless root-cause artifacts were inspected.
+
+If root-cause artifacts were not inspected, mark the proposal as `Not verified` and inspect them before recommending a fix.
+
+Prefer fixing the producer/root cause over adding a downstream warning, fallback, or workaround.
+
+A downstream guard is acceptable only when:
+
+- the producer fix is outside current scope
+- the downstream tool can be run standalone and needs its own protection
+- the guard prevents bad output without hiding the root cause
+
+Examples:
+
+- If bad rendered output may come from a generator agent, inspect the generator agent before patching the renderer.
+- If a report is missing data, inspect the data producer before patching the display layer.
+- If a command failed, inspect the command source of truth before changing the command.
+- If a support script failed, inspect the support script before changing generated-agent instructions.
+- If verification failed, inspect the verification contract before changing implementation.
+- If an agent skipped a required phase, inspect that agent's instructions before adding a downstream warning.
+
+Perform this root-cause artifact check before:
+
+- classifying a fix as safe
+- asking the user whether to apply a fix
+- editing downstream implementation files
+- calling the proposed change ready
+
+If the user pushes back with a question like "did you read the agent?", treat that as evidence that root-cause validation may have been skipped.
+
+Stop and inspect the likely root-cause artifact before continuing.
 
 ## Command and script failure analysis
 
