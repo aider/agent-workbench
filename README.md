@@ -1,35 +1,40 @@
 # Agent Workbench
 
-A small workbench for creating, testing, and refining AI coding agents without turning global instructions into a wall of hard rules.
+A small workbench for designing AI agent workflows without turning global instructions into a wall of hard rules.
 
-The goal is simple: keep stable project rules small, move repeatable procedures into skills, and use focused subagents for work that needs its own context.
+The goal is simple: let `agent-architect` decide the structure, keep stable project rules small, move repeatable procedures into skills, and use focused subagents when the workflow is too large for one agent.
 
 ## Repository layout
 
 ```text
 AGENTS.md                              Project operating rules for agents
-.claude/agents/agent-writer.md         Subagent that writes and refactors agents
-.claude/agents/verifier.md             Subagent that verifies changes against a contract
+.claude/agents/agent-architect.md      Main entry point for messy workflows
+.claude/agents/agent-writer.md         Writes specific agents, skills, templates, and contracts
+.claude/agents/verifier.md             Verifies changes against a contract
 skills/verify-change/SKILL.md          Reusable verification workflow
 
-/ templates
+templates/
   agent-template.md                    Template for a new subagent
+  concise-output.md                    Default short output format
+  flow-architecture.md                 Template for splitting messy workflows
   verification-contract.md             Template for defining done and evidence
 
-/ examples
-  first-agent-request.md               Example request for creating an agent
+examples/
+  first-agent-request.md               Simple agent creation example
+  messy-workflow-to-agent-flow.md      Example where architect decides the split
 ```
 
 ## Core idea
 
-Do not solve agent reliability by adding more and more global rules.
+Do not fix agent reliability by adding more and more global rules.
 
 Use this split instead:
 
-1. **Agent writer** creates or refactors a focused agent from a workflow.
-2. **Verification contract** defines what must be true before the work is done.
-3. **Verifier** checks the result and reports evidence.
-4. **Skill** captures repeatable verification steps so they do not live in every prompt.
+1. **Agent architect** decides the workflow structure.
+2. **Agent writer** creates or updates specific artifacts.
+3. **Verification contract** defines what must be true before the work is done.
+4. **Verifier** checks the result and reports evidence.
+5. **Skills** capture repeatable procedures so they do not live in every prompt.
 
 ## Quick start
 
@@ -41,15 +46,30 @@ cd agent-workbench
 claude
 ```
 
-Ask Claude Code:
+Start with `agent-architect`:
 
 ```text
-Use the agent-writer agent to create a focused subagent for this workflow:
-<describe the workflow>
+Use agent-architect.
 
-Use templates/verification-contract.md as the done contract.
-After writing it, use the verifier agent to check the result.
+Here is my messy workflow:
+<paste workflow>
+
+Design the agent flow yourself.
+If instructions are too large, split them into subagents or skills.
+Keep the output short and clear.
+Create or update files.
+Prepare verification criteria.
 ```
+
+## When to use each piece
+
+Use `agent-architect` when the workflow is unclear, too large, or needs splitting.
+
+Use `agent-writer` only after the architecture is known and a specific file needs to be written.
+
+Use `verifier` after changes are made and you need evidence that the result matches the contract.
+
+Use `verify-change` when you need a reusable verification checklist.
 
 ## Skill installation note
 
@@ -71,20 +91,24 @@ Copy-Item -Recurse skills\verify-change .claude\skills\verify-change
 
 ## Working principles
 
+- Start with architecture, not more rules.
 - Keep global instructions short.
-- Keep each subagent focused on one job.
+- Move long procedures into skills.
+- Move role-specific work into subagents.
 - Give every agent a clear trigger in `description`.
 - Give write-capable agents only the tools they need.
+- Keep default output short and clear.
 - Make verification explicit before calling work done.
 - If a check was not run, say that it was not run.
 - Prefer evidence over confidence.
 
 ## First milestone
 
-This initial version gives you a minimal agent factory:
+This version gives you a minimal agent architecture workbench:
 
+- an architect agent
 - a writer agent
 - a verifier agent
 - one verification skill
-- templates for future agents and verification contracts
-- one example request
+- templates for agents, flows, short output, and verification contracts
+- examples for simple and messy workflows
