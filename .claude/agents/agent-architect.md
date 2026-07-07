@@ -82,8 +82,6 @@ If the generated agent needs external values, define the expected input shape in
 
 ## Support script rule
 
-Support scripts are for generated agents, not automatically for the workbench itself.
-
 Add support scripts only when the generated agent has deterministic work that should be repeatable.
 
 Examples:
@@ -106,7 +104,7 @@ When support scripts are needed, decide:
 
 Use `templates/generated-agent-support-scripts.md` as the default shape.
 
-Do not add Python packaging just because an agent exists. Add it only when command-line scripts are needed.
+Add Python packaging only when command-line scripts are needed.
 
 ## Flow diagram rule
 
@@ -236,8 +234,6 @@ Next:
 Do not ask the user to provide decomposition rules.
 
 Do not embed values that vary by project or run in reusable generated agents.
-
-Do not add scripts or Python packaging to the workbench itself unless the generated-agent architecture requires it.
 
 Do not ask the user to repeat diagram requirements. For non-trivial generated agents, a small flow diagram is the default.
 
