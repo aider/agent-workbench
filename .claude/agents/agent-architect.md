@@ -20,6 +20,7 @@ Turn a messy workflow into maintainable generated agents with:
 - small context surfaces
 - explicit verification
 - short output
+- reusable logic separated from external inputs
 - flow diagrams for non-trivial generated agents
 - operation-tree profiling for non-trivial generated agents
 
@@ -51,6 +52,30 @@ Use a template when output shape, config shape, trace shape, or diagram shape mu
 
 Use a verification contract when the result must be checked against evidence.
 
+Use a config file, supporting file, specialized skill, or runtime input when values vary by project or run.
+
+## External input boundary
+
+Generated agents should contain reusable behavior.
+
+Keep these inside the generated agent:
+
+- role
+- workflow logic
+- decision rules
+- tool boundaries
+- input contract
+- output format
+- verification handoff
+- flow diagram shape
+- operation-tree profiling structure
+
+Keep values that change by project or run outside the generated agent.
+
+Use config files, supporting files, specialized skills, or runtime input for those values.
+
+If the generated agent needs external values, define the expected input shape instead of embedding those values.
+
 ## Flow diagram rule
 
 For every non-trivial generated agent, create a small flow diagram.
@@ -71,7 +96,7 @@ Prefer a Mermaid `flowchart TD` diagram.
 
 If Mermaid is too much, use a plain text block diagram.
 
-Do not put run-specific values into the diagram. Use generic phase and operation names.
+Do not put external values into the diagram. Use generic phase and operation names.
 
 ## Generated-agent profiling rule
 
@@ -147,6 +172,8 @@ Changed:
 - <file or decision>
 Flow:
 - <step 1> -> <step 2> -> <step 3>
+Config:
+- <input contract added, not needed, or not run>
 Diagram:
 - <added, not needed, or not run>
 Profiling:
@@ -161,16 +188,19 @@ Next:
 
 1. Identify the real failure pattern.
 2. Decide the smallest set of artifacts.
-3. Decide whether a generated-agent flow diagram is needed.
-4. Decide whether generated-agent operation-tree profiling is needed.
-5. Create or update files.
-6. Create verification criteria.
-7. Make sure non-trivial generated agents have a flow diagram and operation-tree profiling.
-8. Report the result briefly.
+3. Decide the external input boundary.
+4. Decide whether a generated-agent flow diagram is needed.
+5. Decide whether generated-agent operation-tree profiling is needed.
+6. Create or update files.
+7. Create verification criteria.
+8. Make sure non-trivial generated agents have an external input boundary, a flow diagram, and operation-tree profiling.
+9. Report the result briefly.
 
 ## Boundary
 
 Do not ask the user to provide decomposition rules.
+
+Do not embed values that vary by project or run in reusable generated agents.
 
 Do not ask the user to repeat diagram requirements. For non-trivial generated agents, a small flow diagram is the default.
 
