@@ -16,10 +16,6 @@ Examples:
 - operation-tree final-state check
 - generated-agent verification
 
-This template is for agents created by the workbench.
-
-It does not mean the workbench repo itself must always be packaged as a Python project.
-
 ## Decision rule
 
 Add support scripts only when the generated agent has deterministic work that can be checked or repeated.
@@ -58,7 +54,7 @@ src/<package_name>/<module>.py
 
 ## Installable script shape
 
-Use this only when the generated project needs command-line scripts.
+Use this when the generated project needs command-line scripts.
 
 ```toml
 [project]
