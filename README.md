@@ -2,14 +2,14 @@
 
 A small workbench for designing generated AI agents without turning global instructions into a wall of hard rules.
 
-The core goal is simple: create focused reusable agents from messy workflows, keep variable run values outside agent instructions, show each non-trivial flow as a small diagram, verify the result, and make generated agents observable through operation-tree profiling.
+The core goal is simple: create focused reusable agents from messy workflows, keep variable run values outside agent instructions, add support scripts for deterministic generated-agent checks when useful, show each non-trivial flow as a small diagram, verify the result, and make generated agents observable through operation-tree profiling.
 
 ## Repository layout
 
 ```text
 AGENTS.md                                      Project operating rules
 .claude/agents/agent-architect.md              Designs the generated-agent architecture
-.claude/agents/agent-writer.md                 Writes specific agents, skills, templates, and contracts
+.claude/agents/agent-writer.md                 Writes specific agents, skills, templates, support scripts, and contracts
 .claude/agents/agent-flow-profiler.md          Analyzes operation-tree traces from generated agents
 .claude/agents/verifier.md                     Verifies changes against a contract
 .claude/skills/architect-flow/SKILL.md         Short entry point for messy workflows
@@ -22,6 +22,7 @@ templates/
   flow-architecture.md                         Template for splitting messy workflows
   generated-agent-config.md                    Template for values supplied outside reusable agents
   generated-agent-flow-diagram.md             Template for generated-agent block diagrams
+  generated-agent-support-scripts.md          Template for generated-agent support scripts
   verification-contract.md                     Template for defining done and evidence
   workbench-verification-contract.md           Contract for verifying this workbench
 
@@ -48,11 +49,12 @@ generated agent trace -> agent-flow-profiler
 
 1. `agent-architect` reads a messy workflow and decides the smallest useful structure.
 2. `agent-architect` owns the generated-agent flow diagram.
-3. `agent-writer` creates the actual agent, skill, template, or contract.
-4. Values that vary by project or run are supplied through config, supporting files, specialized skills, or runtime input.
-5. Non-trivial generated agents get operation-tree profiling.
-6. `verifier` checks the changed files against evidence.
-7. `agent-flow-profiler` can later analyze the trace from a generated agent.
+3. `agent-architect` decides whether generated-agent support scripts are useful.
+4. `agent-writer` creates the actual agent, skill, template, support script, or contract.
+5. Values that vary by project or run are supplied through config, supporting files, specialized skills, or runtime input.
+6. Non-trivial generated agents get operation-tree profiling.
+7. `verifier` checks the changed files against evidence.
+8. `agent-flow-profiler` can later analyze the trace from a generated agent.
 
 ## Configuration boundary
 
@@ -67,6 +69,7 @@ Keep inside the agent:
 - input contract
 - output format
 - verification handoff
+- support-script contract
 - flow diagram shape
 - operation-tree profiling structure
 
@@ -81,6 +84,25 @@ Keep outside the agent:
 - reference records
 
 Use `templates/generated-agent-config.md` for the shape of those external inputs.
+
+## Generated-agent support scripts
+
+Support scripts are optional tools for agents created by this workbench.
+
+Use support scripts when a generated agent has deterministic checks or repeatable local tooling.
+
+Do not add scripts or Python packaging just because an agent exists.
+
+When scripts are useful, the generated-agent architecture should define:
+
+- script owner: agent, skill, or shared tool
+- script location
+- install command, if needed
+- run command
+- README update
+- verifier check
+
+Use `templates/generated-agent-support-scripts.md` as the default shape.
 
 ## Flow diagrams
 
@@ -190,6 +212,7 @@ Analyze this trace from a generated agent:
 - Move repeatable procedures into skills.
 - Move role-specific work into subagents.
 - Keep reusable agent logic separate from external inputs.
+- Add support scripts for deterministic generated-agent checks when useful.
 - Add a flow diagram to non-trivial generated agents.
 - Add operation-tree profiling to non-trivial generated agents.
 - Keep profiling low-overhead.
