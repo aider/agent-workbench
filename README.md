@@ -11,12 +11,16 @@ AGENTS.md                                      Project operating rules
 REVIEW.md                                      Short entrypoint for reviewing existing external agent flows
 .claude/agents/agent-architect.md              Designs the generated-agent architecture
 .claude/agents/agent-flow-reviewer.md          Reviews existing external agent flows before rewrite
+.claude/agents/agent-run-fixer.md              Fixes failed previous generated-agent runs
 .claude/agents/agent-writer.md                 Writes specific agents, skills, templates, support scripts, and contracts
 .claude/agents/agent-flow-profiler.md          Analyzes operation-tree traces from generated agents
 .claude/agents/verifier.md                     Verifies changes against a contract
 .claude/skills/architect-flow/SKILL.md         Short entry point for messy workflows
 .claude/skills/instrument-generated-agent/SKILL.md Adds operation-tree profiling to generated agents
 skills/verify-change/SKILL.md                  Shared verification workflow
+
+docs/
+  context-feasibility.md                       Evidence for previous-chat context reliability
 
 templates/
   agent-run-trace.md                           Template for generated-agent operation traces
@@ -54,6 +58,12 @@ For existing external agent systems that need review before rewrite:
 existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
 ```
 
+For failed, interrupted, or incorrect previous generated-agent runs:
+
+```text
+visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
+```
+
 ## What the workbench does
 
 1. `agent-architect` reads a messy workflow and decides the smallest useful structure.
@@ -65,6 +75,7 @@ existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
 7. `verifier` checks the changed files against evidence.
 8. `agent-flow-profiler` can later analyze the trace from a generated agent.
 9. `agent-flow-reviewer` audits an existing external agent system before any rewrite.
+10. `agent-run-fixer` fixes a failed previous generated-agent run using visible chat context plus repository evidence.
 
 ## Review an existing agent flow
 
@@ -104,6 +115,22 @@ The review checks:
 - flow diagrams
 - operation-tree profiling
 - verifier separation and evidence checks
+
+## Fix a previous agent run
+
+Use the fixer when the user wants to recover from a failed, interrupted, or incorrect generated-agent run.
+
+Default prompt:
+
+```text
+Fix this.
+```
+
+The fixer uses visible chat context when available, but treats repository evidence as the source of truth.
+
+It checks git status, git diff, changed files, generated-agent instructions, skills, traces, handoff blocks, and visible command or test output before choosing a fix.
+
+It does not rely on hidden chat history or undocumented VS Code internal chat storage.
 
 ## Configuration boundary
 

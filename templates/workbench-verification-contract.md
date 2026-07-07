@@ -4,7 +4,7 @@ Use this contract to verify the core workbench.
 
 ## Change
 
-The repository should provide a small system for turning messy workflows into reusable generated agents and for reviewing existing external agent flows with explicit verification, external input boundaries, optional support scripts for deterministic generated-agent checks, flow diagrams, and operation-tree profiling.
+The repository should provide a small system for turning messy workflows into reusable generated agents, reviewing existing external agent flows, and fixing failed previous generated-agent runs with explicit verification, external input boundaries, optional support scripts for deterministic generated-agent checks, flow diagrams, and operation-tree profiling.
 
 ## Required core flow
 
@@ -22,6 +22,12 @@ For an existing external agent system that needs review before rewrite:
 
 ```text
 existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
+```
+
+For a failed, interrupted, or incorrect previous generated-agent run:
+
+```text
+visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
 ```
 
 ## Acceptance criteria
@@ -58,6 +64,9 @@ existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
 | AC28 | Short review entrypoint exists | `REVIEW.md` exists, points to `agent-flow-reviewer.md`, says review-only by default, says modification requires an explicit request for changes, fixes, refactor, rewrite, or implementation, requires inventory first, and requires flow reconstruction before recommendations |
 | AC29 | Existing-flow review is automatic from repo instructions | `AGENTS.md` routes review requests to `agent-flow-reviewer.md`, says the user does not need to mention `REVIEW.md`, and preserves review-only default behavior |
 | AC30 | README shows the minimal review prompt | `README.md` shows `Review <target-project>.` as the primary prompt and says `REVIEW.md` is optional reference only |
+| AC31 | Context feasibility note exists | `docs/context-feasibility.md` explains what was checked, does not claim unsupported VS Code chat storage access, and states Option A/B/C |
+| AC32 | Fixer workflow exists | `agent-run-fixer.md` identifies the previous agent/run before fixing, uses visible chat context if available, verifies against repository evidence, and does not rely only on hidden chat history |
+| AC33 | Fixer routing is documented | `AGENTS.md` routes "Fix this" style generated-agent failures to `agent-run-fixer.md` and `README.md` documents the simple `Fix this.` UX |
 
 ## Manual checks
 
@@ -69,6 +78,7 @@ AGENTS.md
 REVIEW.md
 .claude/agents/agent-architect.md
 .claude/agents/agent-flow-reviewer.md
+.claude/agents/agent-run-fixer.md
 .claude/agents/agent-writer.md
 .claude/agents/agent-flow-profiler.md
 .claude/agents/verifier.md
@@ -84,6 +94,7 @@ templates/generated-agent-flow-diagram.md
 templates/flow-architecture.md
 templates/verification-contract.md
 templates/workbench-verification-contract.md
+docs/context-feasibility.md
 examples/agent-flow-hang-debug.md
 examples/first-agent-request.md
 examples/generated-agent-profiling.md

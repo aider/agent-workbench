@@ -26,6 +26,12 @@ For an existing external agent system that needs review:
 existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
 ```
 
+For a failed, interrupted, or incorrect previous generated-agent run:
+
+```text
+visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
+```
+
 ## How to work in this repo
 
 1. Understand the requested workflow before editing files.
@@ -38,6 +44,7 @@ existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
 8. Add a flow diagram to non-trivial generated agents.
 9. Add operation-tree profiling to non-trivial generated agents.
 10. Review existing external agent flows before proposing rewrites.
+11. Route "Fix this" style generated-agent run failures to the fixer workflow.
 
 ## External input boundary
 
@@ -88,6 +95,29 @@ A review means:
 4. produce an evidence-based improvement plan
 
 Do not say "looks good" without evidence.
+
+## Previous agent run fixer
+
+When the user says "Fix this", "Fix the previous agent run", or "Fix what went wrong" after a generated-agent run, use `.claude/agents/agent-run-fixer.md`.
+
+The fixer should use visible chat context when available, but must not assume chat context is complete.
+
+Do not try to read VS Code internal chat history files unless official documentation says that is supported.
+
+The fixer must verify against repository evidence:
+
+- `git status`
+- `git diff`
+- changed files
+- `.claude/agents/*.md`
+- `.claude/skills/*/SKILL.md`
+- `.agent-runs/*.md`
+- failure handoff blocks
+- command, script, or test output visible in files or chat
+
+The fixer should identify the previous agent/run, classify the issue, and fix the smallest correct thing.
+
+Ask the user only when multiple plausible fixes could damage the wrong files.
 
 ## Support script standard
 
