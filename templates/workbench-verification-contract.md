@@ -1,47 +1,55 @@
 # Workbench Verification Contract
 
-Use this contract to verify the agent workbench structure.
+Use this contract to verify the refactored core workbench.
 
 ## Change
 
-The repository should provide a minimal system for turning messy workflows into maintainable agents, adding built-in profiling to generated agents, and profiling app or service slowness before changing code.
+The repository should provide a small system for turning messy workflows into generated agents with explicit verification and operation-tree profiling.
 
-## Required flows
+## Required core flow
 
 ```text
 /architect-flow -> agent-architect -> agent-writer -> verifier
-generated agent with profiling hooks -> agent-flow-profiler analyzes trace if needed
-/profile-slow-flow -> performance-profiler -> verifier if files change
+```
+
+For a slow or stuck generated agent:
+
+```text
+generated agent trace -> agent-flow-profiler
 ```
 
 ## Acceptance criteria
 
 | ID | Criterion | Required evidence |
 |---|---|---|
-| AC1 | README makes `agent-architect` the main agent entry point | `README.md` mentions `agent-architect` as the main entry point |
-| AC2 | README provides a short reusable architecture invocation | `README.md` shows `/architect-flow` |
-| AC3 | Architect-flow project skill exists | `.claude/skills/architect-flow/SKILL.md` exists |
-| AC4 | Architect decides decomposition | `.claude/agents/agent-architect.md` says it decides agents, skills, templates, and verification |
-| AC5 | Writer is separate from architect | `.claude/agents/agent-writer.md` exists and writes specific artifacts |
-| AC6 | Writer adds profiling to generated agents | `.claude/agents/agent-writer.md` says to add profiling hooks for non-trivial generated agents |
-| AC7 | Generated-agent instrumentation skill exists | `.claude/skills/instrument-generated-agent/SKILL.md` exists |
-| AC8 | Generated-agent trace skill exists | `.claude/skills/agent-flow-trace/SKILL.md` exists |
-| AC9 | Agent-flow profiler exists | `.claude/agents/agent-flow-profiler.md` exists |
-| AC10 | Trace template explains START/END hang diagnosis | `templates/agent-run-trace.md` explains last START without END |
-| AC11 | Generated-agent profiling example exists | `examples/generated-agent-profiling.md` exists |
-| AC12 | Verifier is separate from writer | `.claude/agents/verifier.md` exists and is verification-focused |
-| AC13 | Short output is a default rule | `AGENTS.md`, `agent-architect`, or templates mention short clear output |
-| AC14 | Large workflows have an example | `examples/messy-workflow-to-agent-flow.md` exists |
-| AC15 | Verification is explicit | `templates/verification-contract.md` and `skills/verify-change/SKILL.md` exist |
-| AC16 | App or service slowness has a profiling flow | `.claude/skills/profile-slow-flow/SKILL.md` and `.claude/agents/performance-profiler.md` exist |
+| AC1 | README describes the small core flow | `README.md` shows the required core flow |
+| AC2 | README core layout stays focused on generated-agent design | README layout lists architect, writer, verifier, generated-agent profiler, and instrumentation skill |
+| AC3 | Architect owns decomposition | `agent-architect.md` says the user does not provide decomposition rules |
+| AC4 | Architect requires operation-tree profiling for non-trivial generated agents | `agent-architect.md` describes `phase -> operation -> optional sub_operation` |
+| AC5 | Writer creates specific artifacts after architecture is known | `agent-writer.md` says to hand off to architect when architecture is unclear |
+| AC6 | Writer adds operation-tree profiling to generated agents | `agent-writer.md` includes generated-agent profiling rules |
+| AC7 | Generated-agent instrumentation skill exists | `instrument-generated-agent/SKILL.md` defines operation-tree profiling |
+| AC8 | Agent-flow profiler analyzes generated-agent traces | `agent-flow-profiler.md` analyzes operation-tree traces |
+| AC9 | Every planned operation has a final-state rule | relevant files say planned operations must end as `END`, `SKIP`, or `ERROR` |
+| AC10 | Trace template exists | `templates/agent-run-trace.md` uses operation-tree trace format |
+| AC11 | Verifier is separate from writer | `verifier.md` is verification-focused |
+| AC12 | Output remains short | core agents or templates require short output |
 
-## Checks to run
+## Manual checks
 
-```bash
-find . -maxdepth 5 -type f | sort
-grep -R "instrument-generated-agent\|agent-flow-trace\|agent-flow-profiler" README.md .claude/agents .claude/skills examples templates
-grep -R "last START\|START.*END\|without.*END" README.md .claude/agents .claude/skills examples templates
-grep -R "short" README.md AGENTS.md .claude/agents .claude/skills templates examples
+Check these files:
+
+```text
+README.md
+.claude/agents/agent-architect.md
+.claude/agents/agent-writer.md
+.claude/agents/agent-flow-profiler.md
+.claude/agents/verifier.md
+.claude/skills/architect-flow/SKILL.md
+.claude/skills/instrument-generated-agent/SKILL.md
+templates/agent-template.md
+templates/agent-run-trace.md
+templates/verification-contract.md
 ```
 
 ## Expected verifier result
