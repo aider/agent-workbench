@@ -26,6 +26,7 @@ templates/
   workbench-verification-contract.md           Contract for verifying this workbench
 
 examples/
+  agent-flow-hang-debug.md                     Example for finding a stuck generated-agent operation
   first-agent-request.md                       Simple agent creation example
   generated-agent-profiling.md                 Example for profiling agents created by the workbench
   messy-workflow-to-agent-flow.md              Example where architect decides the split
