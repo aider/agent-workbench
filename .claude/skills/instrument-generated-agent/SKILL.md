@@ -1,5 +1,5 @@
 ---
-description: Add low-overhead built-in profiling and trace hooks to agents created by this workbench. Use whenever generating or refactoring an agent that may run multi-step work, call tools, scan files, run commands, hand off to another agent, or become slow or stuck.
+description: Add low-overhead operation-tree profiling to agents created by this workbench. Use whenever generating or refactoring an agent that has phases, operations, tool calls, file scans, commands, handoffs, loops, or any workflow where the user may need to know exactly which phase or operation took the most time or got stuck.
 argument-hint: "[agent file or agent design]"
 ---
 
@@ -14,11 +14,12 @@ Agents created by this workbench should be observable by default without making 
 The user should be able to answer:
 
 - which generated agent ran
-- which phase started
-- which phase ended
-- which operation was slow
-- which operation appears stuck
-- what evidence supports that conclusion
+- which phases existed
+- which operations existed inside each phase
+- which operation ended, skipped, failed, or got stuck
+- which phase took the most time
+- which operation took the most time
+- what evidence supports the diagnosis
 
 ## Important distinction
 
@@ -26,39 +27,61 @@ This skill instruments the agents produced by the workbench.
 
 It is not primarily for profiling the workbench itself.
 
+## Core requirement
+
+Use an operation tree, not random trace points.
+
+The generated agent must define its execution as:
+
+```text
+phase -> operation -> optional sub_operation
+```
+
+Every planned operation must finish with one final state:
+
+```text
+END | SKIP | ERROR
+```
+
+Do not silently drop planned operations.
+
+If an operation is not executed, record `SKIP` with a short reason.
+
+If the run hangs, the likely stuck point is the last `START` without `END`, `SKIP`, or `ERROR`.
+
 ## Low-overhead rule
 
 Profiling must be cheap.
 
 Default approach:
 
-1. Keep trace entries in the agent's run notes while working.
-2. Write one compact trace summary at the end.
-3. Write to `.agent-runs/<trace-id>.md` only when the agent can write files and the workflow is complex enough to justify it.
-4. Do not write a file after every operation.
-5. Do not log every sentence, thought, or minor tool call.
+1. Build the operation tree at the start or during planning.
+2. Keep operation entries in run notes while working.
+3. Write one compact trace summary at the end.
+4. Write to `.agent-runs/<trace-id>.md` only when the agent can write files and the workflow is complex enough to justify it.
+5. Do not write a file after every operation.
+6. Do not log every sentence, thought, or minor internal step.
 
-Target size:
+Important: low overhead does not mean skipping operations from the tree.
 
-- normal run: 3 to 8 trace entries
-- complex run: 8 to 20 trace entries
-- avoid more unless the user asks for deep profiling
+It means batching the trace and recording logical operations only.
 
-## When to add profiling
+## What counts as an operation
 
-Add profiling to any generated agent that:
+An operation is a meaningful unit the user may want to debug later, for example:
 
-- has more than one phase
-- reads many files
-- runs broad search
-- writes files
-- runs commands
-- performs verification
-- delegates to another agent
-- can loop or retry
-- may be used in a larger workflow
+- discover files
+- read selected files
+- search for a pattern
+- inspect one subsystem
+- generate a plan
+- edit one target file
+- run a command
+- verify a contract
+- hand off to another agent
+- summarize results
 
-For tiny one-step agents, only add a final trace summary or skip profiling if it adds no value.
+Do not create operations for tiny internal thoughts or wording choices.
 
 ## Required profiling section
 
@@ -67,76 +90,89 @@ Add this section to generated agents:
 ```markdown
 ## Profiling and trace logging
 
-Use low-overhead phase tracing.
+Use low-overhead operation-tree profiling.
 
-Record only major phases and expensive operations.
-Do not log every sentence or minor tool call.
+At the start of the run, define the operation tree:
+
+```text
+phase -> operation -> optional sub_operation
+```
+
+Each planned operation must end in exactly one final state:
+
+- `END` when it completes
+- `SKIP` when intentionally skipped
+- `ERROR` when it fails
+
+Do not silently drop planned operations.
+
+Record `START` before a major operation begins.
+Record `END`, `SKIP`, or `ERROR` when that operation finishes.
+
+If the run becomes slow or appears stuck, the last `START` without a matching final state is the likely stuck operation.
+
 Keep trace entries in run notes while working.
 Write a compact trace summary at the end.
 Write `.agent-runs/<trace-id>.md` only for complex workflows or when the user asks for a trace file.
+Do not write trace files after every operation.
+Do not log every sentence or minor internal step.
 
-Record `START` before a major phase begins.
-Record `END` when that phase completes.
-Record `ERROR` if the phase fails.
-Record `SKIP` if the phase is intentionally skipped.
-
-If the run becomes slow or appears stuck, the last `START` without a matching `END` is the likely stuck operation.
-
-Trace major phases only:
-
-- discovery
-- planning
-- broad search
-- file read
-- file write
-- command run
-- verification
-- handoff
-
-Trace format:
+Trace entry format:
 
 ```text
 trace_id: <id>
-event: START | END | SKIP | ERROR
+op_id: <phase.operation.number>
+parent_id: <parent op_id or none>
+level: phase | operation | sub_operation
+event: PLAN | START | END | SKIP | ERROR
 agent: <agent-name>
 phase: <phase-name>
 operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
-status: running | success | failed | skipped
+status: planned | running | success | skipped | failed
 ```
 
 If exact timing is not available, use step order and set `elapsed_ms: unknown`.
 ```
 
-## Where the trace goes
+## Required final trace summary
 
-Use the lowest-overhead option that still supports diagnosis:
-
-1. For normal runs, include a compact trace summary in the final response.
-2. For complex write-capable agents, write one trace file at `.agent-runs/<trace-id>.md` near the end of the run.
-3. If the platform provides tool timing, reference that timing as evidence instead of duplicating it.
-4. If tracing would add more overhead than value, record `trace: skipped` and explain why in one line.
-
-## Output requirement for generated agents
-
-Generated agents should include this in their output when profiling is relevant:
+Generated agents should include this summary when profiling is relevant:
 
 ```text
 Trace:
 - trace_id: <id or none>
-- entries: <count or none>
+- phases: <count>
+- operations: <count>
+- completed: <count>
+- skipped: <count>
+- failed: <count>
 - slowest phase: <phase or unknown>
-- stuck point: <last START without END or none>
+- slowest operation: <operation or unknown>
+- stuck point: <last START without END/SKIP/ERROR or none>
+```
+
+## Required phase table
+
+When the run has more than one phase, include a compact phase table:
+
+```text
+| Phase | Operations | Completed | Skipped | Failed | Elapsed |
+|---|---:|---:|---:|---:|---:|
+| discovery | 3 | 3 | 0 | 0 | unknown |
+| planning | 2 | 2 | 0 | 0 | unknown |
 ```
 
 ## Rules
 
 - Keep profiling lightweight.
-- Do not log every sentence.
+- Do not skip planned operations from the trace.
 - Do not write trace files repeatedly during the run.
-- Log major phases and expensive operations only.
+- Do not log every sentence or minor internal step.
+- Log logical operations inside phases.
 - Do not invent exact timing.
+- If timing is unknown, still report operation counts and final states.
 - If there is no trace data, say so.
-- Keep profiling output short.
+- Keep profiling output short unless the user asks for the full tree.
