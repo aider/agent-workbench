@@ -21,8 +21,9 @@ Use `$ARGUMENTS` as the verification target. It may contain:
 - a contract
 - a user request
 - a commit or branch reference
+- configured check commands
 
-If `$ARGUMENTS` is empty, inspect the current git status and infer the verification target from changed files.
+If `$ARGUMENTS` is empty, inspect the current repository state and infer the verification target from changed files.
 
 ## Verification workflow
 
@@ -35,11 +36,25 @@ If `$ARGUMENTS` is empty, inspect the current git status and infer the verificat
 4. Run relevant checks when practical.
 5. Return `PASS`, `FAIL`, or `PARTIAL`.
 
-## Suggested commands
+## Check selection
 
-Run only commands that are relevant to the repository and safe for the current task.
+Run only checks that are relevant to the repository and safe for the current task.
 
-Useful discovery commands:
+Prefer checks from:
+
+- the verification contract
+- repository documentation
+- configured check commands
+- package or build files found in the repository
+- user-provided runtime input
+
+For documentation-only changes, prefer structural checks and file inspection.
+
+If no meaningful automated check is available, report that and verify by file inspection.
+
+## Generic discovery commands
+
+Use only when relevant:
 
 ```bash
 git status --short
@@ -47,28 +62,6 @@ git diff --stat HEAD
 git diff HEAD
 find . -maxdepth 4 -type f | sort
 ```
-
-For documentation-only changes, prefer structural checks and file inspection.
-
-For Java or Maven changes, prefer targeted tests first:
-
-```bash
-mvn test
-```
-
-For Node projects, prefer:
-
-```bash
-npm test
-```
-
-For Python projects, prefer:
-
-```bash
-pytest
-```
-
-If no test framework exists, report that no automated test was available.
 
 ## Agent and skill checks
 
@@ -81,6 +74,9 @@ For `.claude/agents/*.md`:
 - write-capable agents have a reason to write.
 - verifier-style agents do not edit files.
 - output format is clear.
+- non-trivial generated agents have an external input boundary.
+- non-trivial generated agents have a flow diagram or explain why one is not needed.
+- non-trivial generated agents have operation-tree profiling.
 
 For `SKILL.md`:
 
@@ -124,3 +120,4 @@ Recommended fixes:
 - Do not hide skipped checks.
 - Do not change files while using this skill unless the user explicitly asks for fixes.
 - If evidence is incomplete, use `PARTIAL`.
+- Do not assume technology-specific commands unless they are present in contract, docs, config, or repository files.
