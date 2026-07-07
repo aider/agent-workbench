@@ -49,24 +49,19 @@ If an input is missing, <state whether to infer, continue, or ask>.
 
 ## Output format
 
-Return:
+Return the shortest useful answer.
 
 ```text
-Summary:
-- <summary>
-
-Findings or changes:
+Result: <one sentence>
+Changed or found:
 - <item>
-
-Evidence:
-- <file, command, or observation>
-
-Risks:
-- <risk or none>
-
-Next step:
-- <next step>
+Why:
+- <one short reason>
+Next:
+- <one next step or none>
 ```
+
+Use longer output only when the task is risky, failed, or needs evidence.
 
 ## Boundaries
 
@@ -92,5 +87,6 @@ Before committing a new agent, check:
 - `description` is specific enough for automatic delegation.
 - tools are limited to what the agent needs.
 - the body has mission, process, output, and boundaries.
+- default output is short and clear.
 - write tools are not granted to review-only agents.
 - there is a verifier handoff.
