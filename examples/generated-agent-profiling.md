@@ -5,7 +5,7 @@ Use this example when the workbench creates agents and those generated agents ma
 ## Problem
 
 ```text
-I use the workbench to create different agents.
+I use the workbench to create generated agents.
 One generated agent has its own multi-step flow.
 When I run that generated agent, it sometimes works slowly or appears stuck.
 I need to know which phase or operation inside that generated agent caused the delay.
@@ -16,6 +16,8 @@ I need to know which phase or operation inside that generated agent caused the d
 When `agent-architect` or `agent-writer` creates a non-trivial generated agent, it should add operation-tree profiling.
 
 The profiling belongs inside the generated agent.
+
+Values that change by project or run should come from config, supporting files, specialized skills, or runtime input.
 
 ## Generated agent must model the run as
 
@@ -37,12 +39,12 @@ op_id: 1
 parent_id: none
 level: phase
 event: PLAN
-agent: project-investigator
+agent: generated-agent
 phase: discovery
-operation: discover project files
+operation: discover configured targets
 time: step-01
 elapsed_ms: unknown
-evidence: planned
+evidence: planned from config
 status: planned
 
 trace_id: run-101
@@ -50,12 +52,12 @@ op_id: 1.1
 parent_id: 1
 level: operation
 event: START
-agent: project-investigator
+agent: generated-agent
 phase: discovery
-operation: scan source files
+operation: read configured target set
 time: step-02
 elapsed_ms: unknown
-evidence: Glob src/**/*.java
+evidence: config target set
 status: running
 
 trace_id: run-101
@@ -63,12 +65,12 @@ op_id: 1.1
 parent_id: 1
 level: operation
 event: END
-agent: project-investigator
+agent: generated-agent
 phase: discovery
-operation: scan source files
+operation: read configured target set
 time: step-03
 elapsed_ms: unknown
-evidence: found 42 files
+evidence: targets loaded
 status: success
 
 trace_id: run-101
@@ -76,12 +78,12 @@ op_id: 2
 parent_id: none
 level: phase
 event: PLAN
-agent: project-investigator
+agent: generated-agent
 phase: analysis
-operation: analyze service dependencies
+operation: analyze configured signals
 time: step-04
 elapsed_ms: unknown
-evidence: planned
+evidence: planned from config
 status: planned
 
 trace_id: run-101
@@ -89,12 +91,12 @@ op_id: 2.1
 parent_id: 2
 level: operation
 event: START
-agent: project-investigator
+agent: generated-agent
 phase: analysis
-operation: inspect dependency usage
+operation: inspect configured signal group
 time: step-05
 elapsed_ms: unknown
-evidence: Grep Feign|RestTemplate|WebClient
+evidence: configured signal group
 status: running
 ```
 
@@ -103,7 +105,7 @@ status: running
 Because `2.1` has `START` and no final state, the likely stuck point is:
 
 ```text
-project-investigator / analysis / inspect dependency usage
+generated-agent / analysis / inspect configured signal group
 ```
 
 ## Expected trace summary
@@ -118,7 +120,7 @@ Trace:
 - failed: 0
 - slowest phase: unknown
 - slowest operation: unknown
-- stuck point: project-investigator/analysis/inspect dependency usage
+- stuck point: generated-agent/analysis/inspect configured signal group
 ```
 
 ## Expected phase table
@@ -149,9 +151,9 @@ Slowest:
 - phase: unknown
 - operation: unknown
 Stuck:
-- project-investigator/analysis/inspect dependency usage
+- generated-agent/analysis/inspect configured signal group
 Evidence:
 - operation 2.1 has START and no END/SKIP/ERROR.
 Next:
-- Split dependency inspection into smaller operations or limit file scope.
+- Split that configured signal group into smaller operations or narrow the configured target set.
 ```
