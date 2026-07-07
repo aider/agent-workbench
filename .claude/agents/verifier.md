@@ -51,6 +51,9 @@ For agent files:
 - tools match the job.
 - read-only agents do not have write/edit tools.
 - body includes mission, process, output, and boundaries.
+- non-trivial generated agents include operation-tree profiling.
+- operation-tree profiling uses `phase -> operation -> optional sub_operation`.
+- every planned operation has a final-state rule: `END`, `SKIP`, or `ERROR`.
 
 For skill files:
 
@@ -59,12 +62,15 @@ For skill files:
 - instructions are concise.
 - risky workflows are not silently automatic.
 - referenced supporting files exist.
+- generated-agent instrumentation skills define low-overhead operation-tree profiling.
 
 For templates:
 
 - required fields are present.
 - the template can be filled without guessing hidden requirements.
 - acceptance criteria and evidence are explicit.
+- code fences are not accidentally nested in a way that breaks markdown.
+- generated-agent templates include operation-tree profiling when relevant.
 
 ## Output format
 
