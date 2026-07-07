@@ -67,6 +67,7 @@ visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
 | AC31 | Context feasibility note exists | `docs/context-feasibility.md` explains what was checked, does not claim unsupported VS Code chat storage access, and states Option A/B/C |
 | AC32 | Fixer workflow exists | `agent-run-fixer.md` identifies the previous agent/run before fixing, uses visible chat context if available, verifies against repository evidence, and does not rely only on hidden chat history |
 | AC33 | Fixer routing is documented | `AGENTS.md` routes "Fix this" style generated-agent failures to `agent-run-fixer.md` and `README.md` documents the simple `Fix this.` UX |
+| AC34 | Fixer handles command and script failures | `agent-run-fixer.md` captures exact command and error when visible, classifies command usage failures, checks source of truth before fixing, avoids guessing command options, fixes the smallest root cause, and reruns the narrowest safe verification command |
 
 ## Manual checks
 

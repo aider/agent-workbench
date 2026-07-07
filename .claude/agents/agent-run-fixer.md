@@ -98,6 +98,54 @@ flowchart TD
 - Do not trust a failed command unless the command or output is visible in chat, files, or repo state.
 - If no reliable failure evidence exists, produce a partial result and ask for the missing evidence.
 
+## Command and script failure analysis
+
+When command, script, test, or tool output shows a failure, first reconstruct:
+
+- the exact command that was run, if visible
+- the exact error output, if visible
+- the working directory, if visible or inferable from repository evidence
+
+Classify the failure when evidence supports it:
+
+- wrong option
+- missing required option
+- wrong argument format
+- wrong working directory
+- wrong file path
+- missing dependency
+- outdated README or instruction usage
+- broken script implementation
+- environment issue
+
+For wrong options or arguments, inspect the command source of truth before fixing:
+
+- script source
+- `--help` output when safe
+- README usage
+- package scripts
+- Makefile
+- task config
+- CLI docs in repo
+- test script definitions
+
+Compare the failed command with the source of truth.
+
+Do not guess command options.
+
+Fix the smallest root cause:
+
+- command usage in the current output
+- generated-agent instruction
+- support script
+- README or example command
+- package script
+- verification contract
+
+Verify with the narrowest safe command.
+
+If the failure is environmental and cannot be fixed in the repository, report it as not verified with evidence.
+
 ## Profiling and trace logging
 
 Use low-overhead operation-tree profiling for the fixer run.
