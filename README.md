@@ -10,8 +10,10 @@ The goal is simple: let `agent-architect` decide the structure, keep stable proj
 AGENTS.md                              Project operating rules for agents
 .claude/agents/agent-architect.md      Main entry point for messy workflows
 .claude/agents/agent-writer.md         Writes specific agents, skills, templates, and contracts
+.claude/agents/performance-profiler.md Profiles slow apps, APIs, tests, builds, DB queries, infra, or agent flows
 .claude/agents/verifier.md             Verifies changes against a contract
 .claude/skills/architect-flow/SKILL.md Project skill for turning messy workflows into agent flows
+.claude/skills/profile-slow-flow/SKILL.md Project skill for profiling slow behavior
 skills/verify-change/SKILL.md          Shared verification workflow
 
 templates/
@@ -19,10 +21,12 @@ templates/
   concise-output.md                    Default short output format
   flow-architecture.md                 Template for splitting messy workflows
   verification-contract.md             Template for defining done and evidence
+  workbench-verification-contract.md   Contract for verifying this workbench
 
 examples/
   first-agent-request.md               Simple agent creation example
   messy-workflow-to-agent-flow.md      Example where architect decides the split
+  profile-slow-flow.md                 Example for profiling slow behavior
 ```
 
 ## Core idea
@@ -34,9 +38,10 @@ Use this split instead:
 1. **Architect-flow skill** gives a short repeatable entry point.
 2. **Agent architect** decides the workflow structure.
 3. **Agent writer** creates or updates specific artifacts.
-4. **Verification contract** defines what must be true before the work is done.
-5. **Verifier** checks the result and reports evidence.
-6. **Skills** capture repeatable procedures so they do not live in every prompt.
+4. **Performance profiler** investigates slow behavior before fixes.
+5. **Verification contract** defines what must be true before the work is done.
+6. **Verifier** checks the result and reports evidence.
+7. **Skills** capture repeatable procedures so they do not live in every prompt.
 
 ## Quick start
 
@@ -48,13 +53,22 @@ cd agent-workbench
 claude
 ```
 
-Use the project skill:
+Use the project skill for messy workflows:
 
 ```text
 /architect-flow
 
 Here is my messy workflow:
 <paste workflow>
+```
+
+Use the profiling skill for slow behavior:
+
+```text
+/profile-slow-flow
+
+This is slow:
+<paste symptom, timing, logs, trace, or file path>
 ```
 
 Or call the architect directly:
@@ -80,6 +94,10 @@ Use `agent-architect` when the workflow is unclear, too large, or needs splittin
 
 Use `agent-writer` only after the architecture is known and a specific file needs to be written.
 
+Use `/profile-slow-flow` when something is slow and you want profiling before fixing.
+
+Use `performance-profiler` when you need a read-only investigation of latency, timeout, CPU, memory, DB, build, test, infra, or agent workflow slowness.
+
 Use `verifier` after changes are made and you need evidence that the result matches the contract.
 
 Use `verify-change` when you need a reusable verification checklist.
@@ -87,6 +105,8 @@ Use `verify-change` when you need a reusable verification checklist.
 ## Skill installation note
 
 This repo includes `.claude/skills/architect-flow/SKILL.md` as a project skill, so Claude Code can expose it as `/architect-flow` from this repository.
+
+This repo includes `.claude/skills/profile-slow-flow/SKILL.md` as a project skill, so Claude Code can expose it as `/profile-slow-flow` from this repository.
 
 This repo also keeps shared skills under `skills/` as source files. To use the shared `verify-change` skill directly in this project, copy or symlink it:
 
@@ -108,6 +128,7 @@ Copy-Item -Recurse skills\verify-change .claude\skills\verify-change
 - Keep global instructions short.
 - Move long procedures into skills.
 - Move role-specific work into subagents.
+- Profile slow behavior before changing code.
 - Give every agent a clear trigger in `description`.
 - Give write-capable agents only the tools they need.
 - Keep default output short and clear.
@@ -120,9 +141,11 @@ Copy-Item -Recurse skills\verify-change .claude\skills\verify-change
 This version gives you a minimal agent architecture workbench:
 
 - an architect-flow skill
+- a profile-slow-flow skill
 - an architect agent
 - a writer agent
+- a performance profiler agent
 - a verifier agent
 - one shared verification skill
 - templates for agents, flows, short output, and verification contracts
-- examples for simple and messy workflows
+- examples for simple, messy, and slow workflows
