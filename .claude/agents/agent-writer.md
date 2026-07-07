@@ -115,7 +115,7 @@ Preferred locations:
 .claude/skills/<skill-name>/README.md
 ```
 
-For shared generated-project tooling:
+For shared scripts used by multiple generated agents:
 
 ```text
 tools/<tool-name>.py

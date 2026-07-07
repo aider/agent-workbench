@@ -63,6 +63,24 @@ Look for:
 
 If an input is missing, `<state whether to infer, continue, or ask>`.
 
+## Support scripts
+
+Use prepared support scripts for predictable deterministic actions when they are available.
+
+Expected script contract:
+
+```text
+script_owner: <agent, skill, shared tool, or installable command-line tooling>
+script_location: <path or not needed>
+install: <command or not needed>
+run: <command or not needed>
+fallback: <report not verified, ask, or continue without script>
+```
+
+Do not write ad hoc helper code during the flow when a prepared support script should exist.
+
+Do not add scripts or Python packaging just because an agent exists.
+
 ## Flow diagram
 
 For non-trivial generated agents, include a small diagram.
@@ -137,6 +155,7 @@ operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
+reason: <required for SKIP, optional otherwise>
 status: planned | running | success | skipped | failed
 ```
 
@@ -189,6 +208,7 @@ Use longer output only when the task is risky, failed, or needs evidence.
 - `<boundary 2>`
 - `<boundary 3>`
 - Do not embed values that vary by project or run.
+- Do not write ad hoc helper code when a prepared support script should exist.
 - Do not make profiling so detailed that it becomes the bottleneck.
 - Do not skip planned operations from the trace. Use `SKIP` with a reason instead.
 
@@ -210,6 +230,7 @@ Before committing a new agent, check:
 - tools are limited to what the agent needs.
 - the body has mission, external input boundary, flow diagram, process, output, operation-tree profiling, and boundaries.
 - variable values are kept outside reusable agent instructions.
+- prepared deterministic support scripts are referenced when useful.
 - profiling is low-overhead.
 - every planned operation has a final-state rule.
 - default output is short and clear.

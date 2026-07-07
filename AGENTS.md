@@ -4,9 +4,9 @@ These rules apply to this repository.
 
 ## Purpose
 
-This repo is for designing generated agents, skills, templates, and verification contracts.
+This repo is for designing and reviewing generated agents, skills, templates, and verification contracts.
 
-The main goal is to reduce instruction overload by moving repeated workflows into focused artifacts, keeping reusable agent logic separate from external inputs, showing non-trivial generated-agent flows with small diagrams, and making non-trivial generated agents observable through operation-tree profiling.
+The main goal is to reduce instruction overload by moving repeated workflows into focused artifacts, reviewing existing agent flows before rewriting them, keeping reusable agent logic separate from external inputs, showing non-trivial generated-agent flows with small diagrams, and making non-trivial generated agents observable through operation-tree profiling.
 
 ## Core flow
 
@@ -20,6 +20,12 @@ For a slow or stuck generated agent:
 generated agent trace -> agent-flow-profiler
 ```
 
+For an existing external agent system that needs review:
+
+```text
+existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
+```
+
 ## How to work in this repo
 
 1. Understand the requested workflow before editing files.
@@ -31,6 +37,7 @@ generated agent trace -> agent-flow-profiler
 7. Keep reusable agent logic separate from external inputs.
 8. Add a flow diagram to non-trivial generated agents.
 9. Add operation-tree profiling to non-trivial generated agents.
+10. Review existing external agent flows before proposing rewrites.
 
 ## External input boundary
 
@@ -47,6 +54,7 @@ Keep these inside generated agents:
 - input contract
 - output format
 - verification handoff
+- support-script contract
 - flow diagram shape
 - operation-tree profiling structure
 
@@ -61,6 +69,41 @@ Keep these outside generated agents:
 - reference records
 
 Use config files, supporting files, specialized skills, or runtime input for those values.
+
+## Existing flow review standard
+
+When reviewing an existing external agent system, start with understanding.
+
+The reviewer should:
+
+- build a file inventory instead of relying only on README
+- reconstruct the actual flow before recommending changes
+- identify agents, skills, scripts, templates, configs, examples, docs, and verification contracts
+- map dependencies, handoffs, verification points, and outputs
+- flag mixed planning, writing, verification, and approval roles
+- check external input boundaries, support scripts, flow diagrams, operation-tree profiling, and verification evidence
+- produce a prioritized improvement plan
+
+Do not rewrite by default during review.
+
+Do not say "looks good" without evidence.
+
+## Support script standard
+
+Support scripts are prepared tools for predictable deterministic actions in generated-agent flows.
+
+Use a support script when the action should already exist before the generated agent runs and the generated agent would otherwise write ad hoc helper code during execution.
+
+Do not add scripts just because an agent exists.
+
+Preferred locations:
+
+- one generated agent: `.claude/agents/<agent-name>.scripts/<script>.py`
+- one skill: `.claude/skills/<skill-name>/scripts/<script>.py`
+- shared by multiple generated agents: `tools/<tool-name>.py`
+- installable command-line tooling: `pyproject.toml`, `src/<package_name>/<module>.py`, and `README.md`
+
+Only add Python packaging when command-line scripts are actually needed.
 
 ## Definition of done
 

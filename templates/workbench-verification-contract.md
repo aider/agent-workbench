@@ -4,7 +4,7 @@ Use this contract to verify the core workbench.
 
 ## Change
 
-The repository should provide a small system for turning messy workflows into reusable generated agents with explicit verification, external input boundaries, optional support scripts for deterministic generated-agent checks, flow diagrams, and operation-tree profiling.
+The repository should provide a small system for turning messy workflows into reusable generated agents and for reviewing existing external agent flows with explicit verification, external input boundaries, optional support scripts for deterministic generated-agent checks, flow diagrams, and operation-tree profiling.
 
 ## Required core flow
 
@@ -18,12 +18,18 @@ For a slow or stuck generated agent:
 generated agent trace -> agent-flow-profiler
 ```
 
+For an existing external agent system that needs review before rewrite:
+
+```text
+existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
+```
+
 ## Acceptance criteria
 
 | ID | Criterion | Required evidence |
 |---|---|---|
 | AC1 | README describes the small core flow | `README.md` shows the required core flow |
-| AC2 | README layout includes all core examples and templates | README lists config, support scripts, diagram, profiling, messy-flow, first-request, and hang-debug examples |
+| AC2 | README layout includes all repository examples and templates | README lists config, support scripts, diagram, trace, profiling, concise-output, messy-flow, first-request, and hang-debug files |
 | AC3 | AGENTS includes the core architecture standards | `AGENTS.md` mentions external input boundary, flow diagrams, and operation-tree profiling |
 | AC4 | Architect owns decomposition | `agent-architect.md` says the user does not provide decomposition rules |
 | AC5 | Architect owns external input boundaries | `agent-architect.md` defines external input boundary decisions |
@@ -36,14 +42,20 @@ generated agent trace -> agent-flow-profiler
 | AC12 | Writer adds operation-tree profiling to generated agents | `agent-writer.md` includes generated-agent profiling rules |
 | AC13 | Generated-agent instrumentation skill exists | `instrument-generated-agent/SKILL.md` defines operation-tree profiling |
 | AC14 | Agent-flow profiler analyzes generated-agent traces | `agent-flow-profiler.md` analyzes operation-tree traces |
-| AC15 | Every planned operation has a final-state rule | relevant files say planned operations must end as `END`, `SKIP`, or `ERROR` |
+| AC15 | Every planned operation has a final-state rule | relevant files say planned operations must end as `END`, `SKIP`, or `ERROR`, skipped operations need a reason, and the stuck point is the last `START` without a final state |
 | AC16 | Trace template exists and is generic | `templates/agent-run-trace.md` uses operation-tree trace format without project-specific examples |
 | AC17 | Config template exists | `templates/generated-agent-config.md` exists for values supplied outside reusable agents |
-| AC18 | Support scripts template exists | `templates/generated-agent-support-scripts.md` exists and is scoped to generated agents |
+| AC18 | Support scripts template exists and is bounded | `templates/generated-agent-support-scripts.md` exists, prevents ad hoc helper code, documents owner locations, and does not imply every agent needs scripts or Python packaging |
 | AC19 | Flow diagram template exists | `templates/generated-agent-flow-diagram.md` exists |
 | AC20 | Verifier checks the new architecture | `verifier.md` checks external input boundary, flow diagram, and operation-tree profiling |
 | AC21 | Examples follow the current architecture | examples start from architect and include config boundary, diagram, profiling, and verification where relevant |
 | AC22 | Output remains short | core agents or templates require short output |
+| AC23 | README describes the existing-flow review use case | `README.md` mentions `agent-flow-reviewer` and says review does not rewrite by default |
+| AC24 | Review artifact inventories before judging | `agent-flow-reviewer.md` requires file inventory and says not to rely only on README |
+| AC25 | Review artifact reconstructs actual flow before recommendations | `agent-flow-reviewer.md` requires flow reconstruction before recommending changes |
+| AC26 | Review artifact checks workbench standards | `agent-flow-reviewer.md` checks external input boundary, support scripts, ad hoc helper code, diagrams, operation-tree profiling, verifier separation, and evidence-based recommendations |
+| AC27 | Review artifact is read-only by default | `agent-flow-reviewer.md` has no write/edit tools and says not to rewrite by default |
+| AC28 | Short review entrypoint exists | `REVIEW.md` exists, points to `agent-flow-reviewer.md`, says review-only by default, says modification requires an explicit request for changes, fixes, refactor, rewrite, or implementation, requires inventory first, and requires flow reconstruction before recommendations |
 
 ## Manual checks
 
@@ -52,7 +64,9 @@ Check these files:
 ```text
 README.md
 AGENTS.md
+REVIEW.md
 .claude/agents/agent-architect.md
+.claude/agents/agent-flow-reviewer.md
 .claude/agents/agent-writer.md
 .claude/agents/agent-flow-profiler.md
 .claude/agents/verifier.md
@@ -61,11 +75,13 @@ AGENTS.md
 skills/verify-change/SKILL.md
 templates/agent-template.md
 templates/agent-run-trace.md
+templates/concise-output.md
 templates/generated-agent-config.md
 templates/generated-agent-support-scripts.md
 templates/generated-agent-flow-diagram.md
 templates/flow-architecture.md
 templates/verification-contract.md
+templates/workbench-verification-contract.md
 examples/agent-flow-hang-debug.md
 examples/first-agent-request.md
 examples/generated-agent-profiling.md

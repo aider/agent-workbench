@@ -21,6 +21,8 @@ The architect owns the flow diagram.
 
 The writer implements the agent from that diagram.
 
+The verifier checks that the diagram exists when needed and does not include variable project or run values.
+
 ## Keep it small
 
 Use a diagram only when the generated agent has more than one meaningful phase, branch, handoff, or verification step.

@@ -58,6 +58,10 @@ For agent files:
 - non-trivial generated agents include operation-tree profiling.
 - operation-tree profiling uses `phase -> operation -> optional sub_operation`.
 - every planned operation has a final-state rule: `END`, `SKIP`, or `ERROR`.
+- skipped operations require a reason.
+- support scripts are referenced only when a prepared deterministic action is useful.
+- support scripts prevent ad hoc helper code during normal generated-agent flow.
+- support-script locations match the documented owner: agent, skill, shared tool, or installable command-line tooling.
 
 For skill files:
 
@@ -77,6 +81,7 @@ For templates:
 - generated-agent templates include an external input boundary when relevant.
 - generated-agent templates include a flow diagram when relevant.
 - generated-agent templates include operation-tree profiling when relevant.
+- support-script templates do not imply every agent needs scripts or Python packaging.
 
 ## Output format
 

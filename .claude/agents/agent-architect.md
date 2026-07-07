@@ -108,6 +108,13 @@ Use `templates/generated-agent-support-scripts.md` as the default shape.
 
 Add Python packaging only when command-line scripts are needed.
 
+Preferred locations are:
+
+- one generated agent: `.claude/agents/<agent-name>.scripts/<script>.py`
+- one skill: `.claude/skills/<skill-name>/scripts/<script>.py`
+- shared by multiple generated agents: `tools/<tool-name>.py`
+- installable command-line tooling: `pyproject.toml`, `src/<package_name>/<module>.py`, and `README.md`
+
 ## Flow diagram rule
 
 For every non-trivial generated agent, create a small flow diagram.

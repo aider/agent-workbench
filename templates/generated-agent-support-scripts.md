@@ -1,6 +1,6 @@
 # Generated Agent Support Scripts Template
 
-Use this template when a generated agent needs prebuilt deterministic actions or repeatable local tooling.
+Use this template when a generated agent needs prebuilt deterministic actions that should already exist before the normal flow runs.
 
 ## Purpose
 
@@ -20,7 +20,7 @@ Examples:
 
 ## Decision rule
 
-Add support scripts only when the generated agent has deterministic work that can be checked, repeated, or reused.
+Add support scripts only when the generated agent has predictable deterministic work that should already exist before the normal flow runs.
 
 Do not add scripts just because an agent exists.
 
@@ -54,6 +54,7 @@ For installable Python tooling in the generated project:
 ```text
 pyproject.toml
 src/<package_name>/<module>.py
+README.md
 ```
 
 ## Installable script shape

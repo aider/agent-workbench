@@ -1,14 +1,16 @@
 # Agent Workbench
 
-A small workbench for designing generated AI agents without turning global instructions into a wall of hard rules.
+A small workbench for designing and reviewing generated AI agents without turning global instructions into a wall of hard rules.
 
-The core goal is simple: create focused reusable agents from messy workflows, keep variable run values outside agent instructions, add support scripts for deterministic generated-agent checks when useful, show each non-trivial flow as a small diagram, verify the result, and make generated agents observable through operation-tree profiling.
+The core goal is simple: create focused reusable agents from messy workflows, review existing agent flows before rewriting them, keep variable run values outside agent instructions, add support scripts for deterministic generated-agent checks when useful, show each non-trivial flow as a small diagram, verify the result, and make generated agents observable through operation-tree profiling.
 
 ## Repository layout
 
 ```text
 AGENTS.md                                      Project operating rules
+REVIEW.md                                      Short entrypoint for reviewing existing external agent flows
 .claude/agents/agent-architect.md              Designs the generated-agent architecture
+.claude/agents/agent-flow-reviewer.md          Reviews existing external agent flows before rewrite
 .claude/agents/agent-writer.md                 Writes specific agents, skills, templates, support scripts, and contracts
 .claude/agents/agent-flow-profiler.md          Analyzes operation-tree traces from generated agents
 .claude/agents/verifier.md                     Verifies changes against a contract
@@ -17,6 +19,7 @@ AGENTS.md                                      Project operating rules
 skills/verify-change/SKILL.md                  Shared verification workflow
 
 templates/
+  agent-run-trace.md                           Template for generated-agent operation traces
   agent-template.md                            Template for a generated subagent
   concise-output.md                            Default short output format
   flow-architecture.md                         Template for splitting messy workflows
@@ -45,6 +48,12 @@ For generated agents that later run slowly or get stuck:
 generated agent trace -> agent-flow-profiler
 ```
 
+For existing external agent systems that need review before rewrite:
+
+```text
+existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
+```
+
 ## What the workbench does
 
 1. `agent-architect` reads a messy workflow and decides the smallest useful structure.
@@ -55,6 +64,44 @@ generated agent trace -> agent-flow-profiler
 6. Non-trivial generated agents get operation-tree profiling.
 7. `verifier` checks the changed files against evidence.
 8. `agent-flow-profiler` can later analyze the trace from a generated agent.
+9. `agent-flow-reviewer` audits an existing external agent system before any rewrite.
+
+## Review an existing agent flow
+
+Use the reviewer when the first goal is understanding an existing agent system.
+
+The reviewer should inventory files, reconstruct the actual flow, identify dependencies and role boundaries, then propose a prioritized plan with evidence.
+
+It does not rewrite by default.
+
+Future review tasks can use the short root entrypoint:
+
+```text
+Review <target-project> using REVIEW.md.
+```
+
+`REVIEW.md` routes to `.claude/agents/agent-flow-reviewer.md` for the full workflow.
+
+```text
+Use agent-flow-reviewer.
+
+Review this existing agent flow from another project.
+Understand how it works.
+Find where it is confusing, overloaded, hardcoded, unverified, or hard to debug.
+Propose a plan to improve it so it matches the workbench standards.
+```
+
+The review checks:
+
+- inventory beyond README
+- actual flow and artifact dependencies
+- role separation similar to `architect -> writer -> verifier`
+- external input boundary
+- support scripts as prepared deterministic tools
+- ad hoc helper code during normal flow
+- flow diagrams
+- operation-tree profiling
+- verifier separation and evidence checks
 
 ## Configuration boundary
 
@@ -89,7 +136,9 @@ Use `templates/generated-agent-config.md` for the shape of those external inputs
 
 Support scripts are optional tools for agents created by this workbench.
 
-Use support scripts when a generated agent has deterministic checks or repeatable local tooling.
+Use support scripts when a generated agent has a predictable deterministic action that should already exist before the normal flow runs.
+
+The purpose is to prevent generated agents from writing ad hoc helper code during execution. The generated agent should call the prepared script instead.
 
 Do not add scripts or Python packaging just because an agent exists.
 
@@ -103,6 +152,25 @@ When scripts are useful, the generated-agent architecture should define:
 - verifier check
 
 Use `templates/generated-agent-support-scripts.md` as the default shape.
+
+Preferred locations:
+
+```text
+.claude/agents/<agent-name>.md
+.claude/agents/<agent-name>.scripts/<script>.py
+
+.claude/skills/<skill-name>/SKILL.md
+.claude/skills/<skill-name>/scripts/<script>.py
+.claude/skills/<skill-name>/README.md
+
+tools/<tool-name>.py
+
+pyproject.toml
+src/<package_name>/<module>.py
+README.md
+```
+
+Only use the Python package layout when command-line tooling is actually needed.
 
 ## Flow diagrams
 
@@ -211,6 +279,7 @@ Analyze this trace from a generated agent:
 - Keep global instructions short.
 - Move repeatable procedures into skills.
 - Move role-specific work into subagents.
+- Review existing flows before rewriting them.
 - Keep reusable agent logic separate from external inputs.
 - Add support scripts for deterministic generated-agent checks when useful.
 - Add a flow diagram to non-trivial generated agents.

@@ -42,6 +42,7 @@ operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
+reason: <required for SKIP, optional otherwise>
 status: planned | running | success | skipped | failed
 ```
 
@@ -59,6 +60,7 @@ operation: discover configured targets
 time: step-01
 elapsed_ms: unknown
 evidence: planned from config
+reason: none
 status: planned
 
 trace_id: run-001
@@ -72,6 +74,7 @@ operation: read configured target set
 time: step-02
 elapsed_ms: unknown
 evidence: config target set
+reason: none
 status: running
 
 trace_id: run-001
@@ -85,6 +88,7 @@ operation: read configured target set
 time: step-03
 elapsed_ms: unknown
 evidence: targets loaded
+reason: none
 status: success
 
 trace_id: run-001
@@ -98,6 +102,7 @@ operation: inspect configured signal group
 time: step-04
 elapsed_ms: unknown
 evidence: configured signal group
+reason: none
 status: running
 ```
 
@@ -138,3 +143,4 @@ Trace:
 - Write `.agent-runs/<trace-id>.md` only for complex write-capable agents.
 - Do not write trace files after every operation.
 - Do not log every sentence or minor internal step.
+- Record a short reason for every `SKIP`.

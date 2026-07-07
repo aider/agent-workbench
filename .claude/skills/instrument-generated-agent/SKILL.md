@@ -116,6 +116,7 @@ operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
+reason: <required for SKIP, optional otherwise>
 status: planned | running | success | skipped | failed
 ```
 

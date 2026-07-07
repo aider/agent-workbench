@@ -1,5 +1,5 @@
 ---
-description: Turn a messy workflow into a small generated-agent architecture. Use when the user wants an agent, skill, prompt system, or AI workflow but does not want to manually define decomposition, subagents, external input boundaries, flow diagrams, verification, or profiling rules.
+description: Turn a messy workflow into a small generated-agent architecture. Use when the user wants an agent, skill, prompt system, or AI workflow but does not want to manually define decomposition, subagents, external input boundaries, support scripts, flow diagrams, verification, or profiling rules.
 argument-hint: "[messy workflow]"
 ---
 
@@ -28,15 +28,24 @@ agent-architect -> agent-writer -> verifier
    - verification contract for done criteria
 3. Split instructions when one agent would mix planning, writing, review, and verification.
 4. Define the external input boundary for values that vary by project or run.
-5. Add a small flow diagram to non-trivial generated agents.
-6. Add operation-tree profiling to non-trivial generated agents.
-7. Prepare verification criteria.
+5. Decide whether predictable deterministic actions need prepared support scripts.
+6. Add a small flow diagram to non-trivial generated agents.
+7. Add operation-tree profiling to non-trivial generated agents.
+8. Prepare verification criteria.
 
 ## External input boundary
 
 Reusable generated agents should contain behavior.
 
 Values that vary by project or run should come from config, supporting files, specialized skills, or runtime input.
+
+## Support script requirement
+
+Support scripts are prepared tools for deterministic generated-agent actions that should already exist before the normal flow runs.
+
+Add them only when the generated agent would otherwise write ad hoc helper code during execution.
+
+Do not add scripts just because an agent exists.
 
 ## Flow diagram requirement
 
@@ -49,6 +58,8 @@ For non-trivial generated agents, create a small diagram showing:
 - verification
 - output
 - where operation-tree trace is recorded
+
+The architect owns the diagram design. The writer implements it.
 
 ## Operation-tree profiling requirement
 
@@ -64,7 +75,13 @@ Every planned operation must finish as:
 END | SKIP | ERROR
 ```
 
+If an operation is skipped, record `SKIP` with a short reason.
+
+If a run gets stuck, the likely stuck point is the last `START` without `END`, `SKIP`, or `ERROR`.
+
 If exact timing is unavailable, still report counts and final states.
+
+Keep profiling low-overhead: keep trace entries in run notes, write one compact summary at the end, write trace files only for complex write-capable agents, and do not log every sentence or minor internal step.
 
 ## Output
 
@@ -78,6 +95,8 @@ Changed:
 - <file or none>
 Config:
 - <input boundary added, not needed, or not run>
+Scripts:
+- <support scripts added, not needed, or not run>
 Diagram:
 - <added, not needed, or not run>
 Profiling:

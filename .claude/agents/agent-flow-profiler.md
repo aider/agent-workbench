@@ -19,7 +19,7 @@ Analyze operation-tree traces and produce a short diagnosis:
 - slowest phase
 - slowest operation
 - stuck operation, if any
-- skipped operations
+- skipped operations and reasons
 - failed operations
 - repeated expensive operations
 - one focused improvement
@@ -54,6 +54,7 @@ operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
+reason: <required for SKIP, optional otherwise>
 status: planned | running | success | skipped | failed
 ```
 
@@ -79,6 +80,7 @@ If exact timing is unavailable, still analyze:
    - sub_operation
 3. Check completeness:
    - every planned operation should have `END`, `SKIP`, or `ERROR`
+   - every `SKIP` should include a reason
    - if not, report the last `START` without a final state as the likely stuck point
 4. Build phase totals:
    - operations count

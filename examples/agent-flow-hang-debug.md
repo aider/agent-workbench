@@ -1,36 +1,43 @@
 # Example: Debug a Stuck Agent Flow
 
-Use this example when an agent workflow creates agents, runs them, and one run becomes slow or appears stuck.
+Use this example when a generated agent run becomes slow or appears stuck.
 
 ## Problem
 
 ```text
-I created an agent flow.
-The flow creates or runs other agents.
-One agent run is slow or stuck.
+I ran a generated agent.
+The generated agent has a multi-step flow.
+One phase or operation is slow or stuck.
 I need to know exactly which agent, phase, or operation caused the delay.
 ```
 
 ## Required design
 
-Generated complex agents should include phase-level trace logging.
+Generated non-trivial agents should include operation-tree profiling.
 
 Flow:
 
 ```text
-agent with trace logging -> agent-flow-profiler -> suggested improvement
+generated agent trace -> agent-flow-profiler -> suggested improvement
 ```
 
 ## Trace rule
 
-Every major operation writes:
+Generated agents model work as:
 
 ```text
-START <agent>/<phase>/<operation>
-END   <agent>/<phase>/<operation>
+phase -> operation -> optional sub_operation
 ```
 
-If the workflow hangs, find the last `START` without a matching `END`.
+Every planned operation ends as:
+
+```text
+END | SKIP | ERROR
+```
+
+If an operation is skipped, record `SKIP` with a short reason.
+
+If the workflow hangs, find the last `START` without `END`, `SKIP`, or `ERROR`.
 
 That is the likely stuck point.
 
@@ -38,44 +45,84 @@ That is the likely stuck point.
 
 ```text
 trace_id: run-42
-event: START
-agent: agent-architect
+op_id: 1
+parent_id: none
+level: phase
+event: PLAN
+agent: generated-agent
 phase: discovery
-operation: scan existing agents
+operation: discover configured targets
 time: step-01
 elapsed_ms: unknown
-evidence: .claude/agents/*.md
+evidence: planned from external input
+reason: none
+status: planned
+
+trace_id: run-42
+op_id: 1.1
+parent_id: 1
+level: operation
+event: START
+agent: generated-agent
+phase: discovery
+operation: read configured target set
+time: step-02
+elapsed_ms: unknown
+evidence: configured targets
+reason: none
 status: running
 
 trace_id: run-42
+op_id: 1.1
+parent_id: 1
+level: operation
 event: END
-agent: agent-architect
+agent: generated-agent
 phase: discovery
-operation: scan existing agents
-time: step-02
+operation: read configured target set
+time: step-03
 elapsed_ms: unknown
-evidence: found 5 agents
+evidence: targets loaded
+reason: none
 status: success
 
 trace_id: run-42
-event: START
-agent: agent-writer
-phase: write
-operation: generate new subagent
-time: step-03
+op_id: 2
+parent_id: none
+level: phase
+event: PLAN
+agent: generated-agent
+phase: analysis
+operation: analyze configured signals
+time: step-04
 elapsed_ms: unknown
-evidence: .claude/agents/new-agent.md
+evidence: planned from external input
+reason: none
+status: planned
+
+trace_id: run-42
+op_id: 2.1
+parent_id: 2
+level: operation
+event: START
+agent: generated-agent
+phase: analysis
+operation: inspect configured signal group
+time: step-05
+elapsed_ms: unknown
+evidence: configured signal group
+reason: none
 status: running
 ```
 
 ## Diagnosis
 
 ```text
-Result: Likely stuck at agent-writer/write/generate new subagent.
+Result: Likely stuck in analysis.
 Evidence:
-- Last START has no matching END.
+- Operation 2.1 has START and no END/SKIP/ERROR.
 Next:
-- Split generation into smaller phases or inspect the target file write.
+- Split that configured signal group into smaller operations or narrow the configured target set.
 ```
 
 ## Prompt to run
@@ -83,7 +130,7 @@ Next:
 ```text
 Use agent-flow-profiler.
 
-Analyze this trace and tell me where the agent workflow is stuck:
+Analyze this trace from a generated agent and tell me where it is stuck:
 <paste trace>
 
 Keep output short.
@@ -91,7 +138,7 @@ Keep output short.
 
 ## What good instrumentation looks like
 
-Trace only important phases:
+Trace only important operations:
 
 - discovery
 - planning
@@ -103,3 +150,5 @@ Trace only important phases:
 - handoff
 
 Do not trace every sentence.
+
+Keep trace entries in run notes while working and write one compact trace summary at the end. Write a trace file only for complex write-capable generated agents.
