@@ -4,12 +4,13 @@ Use this contract to verify the agent workbench structure.
 
 ## Change
 
-The repository should provide a minimal system for turning messy workflows into maintainable agent flows and for profiling slow behavior before changing code.
+The repository should provide a minimal system for turning messy workflows into maintainable agents, adding built-in profiling to generated agents, and profiling app or service slowness before changing code.
 
 ## Required flows
 
 ```text
 /architect-flow -> agent-architect -> agent-writer -> verifier
+generated agent with profiling hooks -> agent-flow-profiler analyzes trace if needed
 /profile-slow-flow -> performance-profiler -> verifier if files change
 ```
 
@@ -22,20 +23,24 @@ The repository should provide a minimal system for turning messy workflows into 
 | AC3 | Architect-flow project skill exists | `.claude/skills/architect-flow/SKILL.md` exists |
 | AC4 | Architect decides decomposition | `.claude/agents/agent-architect.md` says it decides agents, skills, templates, and verification |
 | AC5 | Writer is separate from architect | `.claude/agents/agent-writer.md` exists and writes specific artifacts |
-| AC6 | Verifier is separate from writer | `.claude/agents/verifier.md` exists and is verification-focused |
-| AC7 | Short output is a default rule | `AGENTS.md`, `agent-architect`, or templates mention short clear output |
-| AC8 | Large workflows have an example | `examples/messy-workflow-to-agent-flow.md` exists |
-| AC9 | Verification is explicit | `templates/verification-contract.md` and `skills/verify-change/SKILL.md` exist |
-| AC10 | Slow behavior has a profiling flow | `.claude/skills/profile-slow-flow/SKILL.md` and `.claude/agents/performance-profiler.md` exist |
-| AC11 | Profiling happens before code changes | Performance profiler or profile skill says to profile before fixing/changing code |
-| AC12 | Slow-flow has an example | `examples/profile-slow-flow.md` exists |
+| AC6 | Writer adds profiling to generated agents | `.claude/agents/agent-writer.md` says to add profiling hooks for non-trivial generated agents |
+| AC7 | Generated-agent instrumentation skill exists | `.claude/skills/instrument-generated-agent/SKILL.md` exists |
+| AC8 | Generated-agent trace skill exists | `.claude/skills/agent-flow-trace/SKILL.md` exists |
+| AC9 | Agent-flow profiler exists | `.claude/agents/agent-flow-profiler.md` exists |
+| AC10 | Trace template explains START/END hang diagnosis | `templates/agent-run-trace.md` explains last START without END |
+| AC11 | Generated-agent profiling example exists | `examples/generated-agent-profiling.md` exists |
+| AC12 | Verifier is separate from writer | `.claude/agents/verifier.md` exists and is verification-focused |
+| AC13 | Short output is a default rule | `AGENTS.md`, `agent-architect`, or templates mention short clear output |
+| AC14 | Large workflows have an example | `examples/messy-workflow-to-agent-flow.md` exists |
+| AC15 | Verification is explicit | `templates/verification-contract.md` and `skills/verify-change/SKILL.md` exist |
+| AC16 | App or service slowness has a profiling flow | `.claude/skills/profile-slow-flow/SKILL.md` and `.claude/agents/performance-profiler.md` exist |
 
 ## Checks to run
 
 ```bash
 find . -maxdepth 5 -type f | sort
-grep -R "agent-architect" README.md .claude/agents .claude/skills examples templates
-grep -R "profile-slow-flow\|performance-profiler" README.md .claude/agents .claude/skills examples templates
+grep -R "instrument-generated-agent\|agent-flow-trace\|agent-flow-profiler" README.md .claude/agents .claude/skills examples templates
+grep -R "last START\|START.*END\|without.*END" README.md .claude/agents .claude/skills examples templates
 grep -R "short" README.md AGENTS.md .claude/agents .claude/skills templates examples
 ```
 
