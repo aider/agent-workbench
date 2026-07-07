@@ -1,10 +1,12 @@
 # Generated Agent Support Scripts Template
 
-Use this template when a generated agent needs deterministic checks or repeatable local tooling.
+Use this template when a generated agent needs prebuilt deterministic actions or repeatable local tooling.
 
 ## Purpose
 
-Generated agents should use scripts for work that should not depend on prose instructions.
+Support scripts prevent generated agents from writing ad hoc helper code while executing a flow.
+
+Generated agents should use prepared scripts for deterministic work instead of creating temporary code during the run.
 
 Examples:
 
@@ -18,9 +20,11 @@ Examples:
 
 ## Decision rule
 
-Add support scripts only when the generated agent has deterministic work that can be checked or repeated.
+Add support scripts only when the generated agent has deterministic work that can be checked, repeated, or reused.
 
 Do not add scripts just because an agent exists.
+
+Do not let the generated agent create helper scripts during its normal flow when the need is predictable.
 
 ## Preferred location
 
@@ -77,7 +81,7 @@ Install:
 Run:
   <command-name>
 
-What it checks:
+What it does:
   <short description>
 
 Used by:
@@ -89,8 +93,9 @@ Used by:
 The generated agent should say:
 
 ```text
-Use the support script for deterministic checks when available.
+Use the support script for deterministic work when available.
 If the script is missing or cannot run, report that as not verified.
+Do not write ad hoc helper code during the flow when a prepared support script should exist.
 Do not replace a deterministic script with a prose-only check.
 ```
 
@@ -102,4 +107,5 @@ The verifier should check:
 - script location matches ownership
 - README explains install and run commands
 - generated agent references the script when relevant
+- generated agent does not create ad hoc helper code during normal flow
 - skipped script runs are reported as not verified
