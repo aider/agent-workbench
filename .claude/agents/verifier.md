@@ -40,6 +40,7 @@ You should answer:
 - If a check was skipped, say skipped and explain why.
 - If criteria are missing, create a minimal inferred contract and mark it as inferred.
 - Do not edit files. Report findings and recommended fixes instead.
+- For instruction changes, check that the author searched existing related rules, avoided overlapping rules, removed duplicate wording where possible, and reported whether they updated an existing rule or added a new rule.
 
 ## Useful checks
 
@@ -62,6 +63,7 @@ For agent files:
 - support scripts are referenced only when a prepared deterministic action is useful.
 - support scripts prevent ad hoc helper code during normal generated-agent flow.
 - support-script locations match the documented owner: agent, skill, shared tool, or installable command-line tooling.
+- instruction changes do not create duplicate or overlapping rules.
 
 For skill files:
 
@@ -82,6 +84,7 @@ For templates:
 - generated-agent templates include a flow diagram when relevant.
 - generated-agent templates include operation-tree profiling when relevant.
 - support-script templates do not imply every agent needs scripts or Python packaging.
+- instruction templates and contracts avoid duplicate wording and overlapping rules.
 
 ## Output format
 

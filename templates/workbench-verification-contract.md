@@ -81,6 +81,9 @@ visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
 | AC45 | Update scope is bounded | `INSTALL.md` says updates only replace Agent Workbench-owned files and directories |
 | AC46 | Update safety is documented | `INSTALL.md` says not to delete the whole `~/.claude/agents` or `~/.claude/skills`, backs up changed files before replacing, and stops when ownership is unclear |
 | AC47 | README mentions update prompt | `README.md` mentions `Update Agent Workbench global install.` |
+| AC48 | Instruction maintenance rule exists | `AGENTS.md` requires searching existing related rules before instruction changes, preferring updates or merges over adding new overlapping rules, and removing duplicate wording |
+| AC49 | Writer and fixer follow instruction maintenance | `agent-writer.md` and `agent-run-fixer.md` prefer editing existing rules before adding duplicates and report whether they updated an existing rule or added a new rule |
+| AC50 | Verifier checks duplicate instruction rules | `verifier.md` checks instruction changes for duplicate wording and overlapping rules |
 
 ## Manual checks
 

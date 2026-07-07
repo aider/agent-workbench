@@ -46,6 +46,18 @@ visible chat context + repo evidence -> agent-run-fixer -> smallest correct fix
 10. Review existing external agent flows before proposing rewrites.
 11. Route "Fix this" style generated-agent run failures to the fixer workflow.
 
+## Instruction maintenance
+
+When changing instructions, first search for existing related rules.
+
+Prefer updating or merging existing rules over adding new overlapping rules.
+
+Add a new rule only when no existing rule covers the behavior.
+
+Remove duplicate wording when possible.
+
+Final responses should say whether the change updated an existing rule or added a new rule.
+
 ## External input boundary
 
 Generated agents should contain reusable behavior.

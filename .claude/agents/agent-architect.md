@@ -233,7 +233,7 @@ Next:
 4. Decide whether prepared support scripts are needed to avoid ad hoc helper code during the generated-agent flow.
 5. Decide whether a generated-agent flow diagram is needed.
 6. Decide whether generated-agent operation-tree profiling is needed.
-7. Create or update files.
+7. Create or update files. When changing instructions, search existing related rules and update or merge them before adding new overlapping rules.
 8. Create verification criteria.
 9. Make sure non-trivial generated agents have an external input boundary, support scripts when useful, a flow diagram, and operation-tree profiling.
 10. Report the result briefly.

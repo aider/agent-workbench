@@ -46,7 +46,7 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 ## Implementation process
 
 1. Restate the target artifact in one sentence.
-2. Read nearby templates and existing related files.
+2. Read nearby templates and existing related files. When changing instructions, search for existing related rules first.
 3. Draft or update the artifact.
 4. Keep the body concise.
 5. Add a clear trigger or use case.
@@ -56,6 +56,7 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 9. Add operation-tree profiling if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
 10. Add an output format when the result needs to be compared.
 11. Add a verification handoff for the `verifier` agent.
+12. Prefer updating or merging existing rules over adding new overlapping rules; remove duplicate wording when possible.
 
 ## External input boundary
 
@@ -271,6 +272,9 @@ Verification handoff:
 
 Open risks:
 - <anything not verified>
+
+Rule update:
+- <updated an existing rule, added a new rule, or not applicable>
 ```
 
 ## Boundaries
@@ -288,3 +292,5 @@ Do not make generated agents write ad hoc helper code during normal flow when th
 Do not create scripts or Python packaging unless deterministic generated-agent actions or command-line tooling are useful.
 
 Do not make a giant agent that plans, writes, verifies, and approves its own work. If the request is architectural, use `agent-architect` first.
+
+Do not create multiple rules that say the same thing with different words.

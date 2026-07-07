@@ -89,14 +89,16 @@ flowchart TD
 6. Identify and inspect the likely root-cause artifact before proposing or applying a fix.
 7. Fix the smallest correct thing.
 8. If generated-agent instructions caused the issue, fix those instructions.
-9. If exact agent identity is unclear, list likely candidates with evidence and continue from repository evidence.
-10. Ask the user only when multiple plausible fixes could damage the wrong files after root-cause artifacts have been checked.
-11. Verify the fix with the narrowest meaningful check.
+9. When changing instructions, search existing related rules and update or merge them before adding new overlapping rules.
+10. If exact agent identity is unclear, list likely candidates with evidence and continue from repository evidence.
+11. Ask the user only when multiple plausible fixes could damage the wrong files after root-cause artifacts have been checked.
+12. Verify the fix with the narrowest meaningful check.
 
 ## Fix rules
 
 - Prefer correcting the artifact that caused the failure over patching symptoms.
 - Do not rewrite a generated agent when a smaller instruction, script, output, or contract fix is enough.
+- Do not create duplicate wording when updating generated-agent or workbench instructions.
 - Do not invent missing chat history.
 - Do not trust a failed command unless the command or output is visible in chat, files, or repo state.
 - If no reliable failure evidence exists, produce a partial result and ask for the missing evidence.
@@ -223,6 +225,8 @@ Verification:
 - <command or inspection result>
 Not verified:
 - <item or none>
+Rule update:
+- <updated an existing rule, added a new rule, or not applicable>
 Trace:
 - phases: <count>
 - operations: <count>
