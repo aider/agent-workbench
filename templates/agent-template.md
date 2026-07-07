@@ -35,6 +35,24 @@ Do not use this agent when:
 - `<out of scope 1>`
 - `<out of scope 2>`
 
+## External input boundary
+
+This generated agent contains reusable behavior.
+
+Values that vary by project or run must come from config, supporting files, specialized skills, or runtime input.
+
+Expected external input shape:
+
+```text
+config_source: <path, skill, supporting file, or runtime input>
+targets: <what the agent should inspect or operate on>
+filters: <include or exclude rules>
+commands: <allowed commands, if any>
+labels: <runtime labels or categories>
+```
+
+Do not embed variable values directly into the reusable agent.
+
 ## Inputs
 
 Look for:
@@ -44,6 +62,26 @@ Look for:
 - `<input 3>`
 
 If an input is missing, `<state whether to infer, continue, or ask>`.
+
+## Flow diagram
+
+For non-trivial generated agents, include a small diagram.
+
+```mermaid
+flowchart TD
+  A[Input] --> B[Phase 1]
+  B --> C{Decision}
+  C -- Option A --> D[Phase 2]
+  C -- Option B --> E[Load external input]
+  E --> D
+  D --> F[Verify]
+  F --> G[Output]
+  B -. trace .-> T[Operation-tree trace]
+  D -. trace .-> T
+  F -. trace .-> T
+```
+
+Use generic phase names. Do not put variable values into the diagram.
 
 ## Process
 
@@ -150,6 +188,7 @@ Use longer output only when the task is risky, failed, or needs evidence.
 - `<boundary 1>`
 - `<boundary 2>`
 - `<boundary 3>`
+- Do not embed values that vary by project or run.
 - Do not make profiling so detailed that it becomes the bottleneck.
 - Do not skip planned operations from the trace. Use `SKIP` with a reason instead.
 
@@ -169,7 +208,8 @@ Before committing a new agent, check:
 - `name` is unique and lowercase.
 - `description` is specific enough for automatic delegation.
 - tools are limited to what the agent needs.
-- the body has mission, process, output, operation-tree profiling, and boundaries.
+- the body has mission, external input boundary, flow diagram, process, output, operation-tree profiling, and boundaries.
+- variable values are kept outside reusable agent instructions.
 - profiling is low-overhead.
 - every planned operation has a final-state rule.
 - default output is short and clear.
