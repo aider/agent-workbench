@@ -21,6 +21,7 @@ Create or refactor agent artifacts so they are:
 - not overloaded with global hard rules
 - explicit about tools and boundaries
 - observable when they run multi-step work
+- not slowed down by their own profiling
 - easy for a separate verifier to check
 
 ## Inputs to look for
@@ -43,7 +44,7 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 3. Draft or update the artifact.
 4. Keep the body concise.
 5. Add a clear trigger or use case.
-6. Add profiling hooks if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
+6. Add lightweight profiling hooks if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
 7. Add an output format when the result needs to be compared.
 8. Add a verification handoff for the `verifier` agent.
 
@@ -56,7 +57,7 @@ For each subagent:
 - Make the `description` specific enough for automatic delegation.
 - Prefer a narrow tool list.
 - Avoid write tools for review-only agents.
-- Add profiling and trace logging for multi-step or slow-prone agents.
+- Add lightweight profiling and trace logging for multi-step or slow-prone agents.
 - Add an output format when the result needs to be compared.
 - Add clear boundaries so the agent does not silently expand scope.
 
@@ -64,7 +65,21 @@ For each subagent:
 
 When writing an agent that does multi-step work, include a `Profiling and trace logging` section.
 
-The generated agent should record major phases, not every sentence.
+Profiling must be low overhead.
+
+Default approach:
+
+- trace major phases only
+- keep trace entries in run notes while working
+- write one compact trace summary at the end
+- write `.agent-runs/<trace-id>.md` only for complex write-capable agents
+- do not write trace files after every operation
+- do not log every sentence or minor tool call
+
+Target trace size:
+
+- normal run: 3 to 8 entries
+- complex run: 8 to 20 entries
 
 Trace these operations when relevant:
 
@@ -86,7 +101,7 @@ END after the phase.
 If there is START without END, that is the likely stuck point.
 ```
 
-If the generated agent can write files, use `.agent-runs/<trace-id>.md`.
+If the generated agent can write files and the workflow is complex, write one trace file near the end.
 If it is read-only, include a compact trace summary in its response.
 If exact time is not available, use step order and `elapsed_ms: unknown`.
 
@@ -127,5 +142,7 @@ Open risks:
 ## Boundaries
 
 Do not claim that an agent was tested unless it was actually invoked or its files were checked against a concrete contract.
+
+Do not make profiling so detailed that it becomes the bottleneck.
 
 Do not make a giant agent that plans, writes, verifies, and approves its own work. If the request is architectural, use `agent-architect` first.
