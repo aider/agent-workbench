@@ -70,21 +70,22 @@ Keep these outside generated agents:
 
 Use config files, supporting files, specialized skills, or runtime input for those values.
 
-## Existing flow review standard
+## Existing agent flow review
 
-When reviewing an existing external agent system, start with understanding.
+When the user asks to review an existing external agent system, agent flow, or another project, use `.claude/agents/agent-flow-reviewer.md`.
 
-The reviewer should:
+The user does not need to mention `REVIEW.md`.
 
-- build a file inventory instead of relying only on README
-- reconstruct the actual flow before recommending changes
-- identify agents, skills, scripts, templates, configs, examples, docs, and verification contracts
-- map dependencies, handoffs, verification points, and outputs
-- flag mixed planning, writing, verification, and approval roles
-- check external input boundaries, support scripts, flow diagrams, operation-tree profiling, and verification evidence
-- produce a prioritized improvement plan
+Default mode is review-only.
 
-Do not rewrite by default during review.
+Do not modify the target project unless the user explicitly asks for changes, fixes, refactor, rewrite, or implementation.
+
+A review means:
+
+1. inventory files first
+2. reconstruct actual flow
+3. check workbench standards
+4. produce an evidence-based improvement plan
 
 Do not say "looks good" without evidence.
 

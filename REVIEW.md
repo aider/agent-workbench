@@ -1,6 +1,10 @@
 # Agent Flow Review Entrypoint
 
-Use this file when reviewing an existing external agent system.
+Optional reference entrypoint.
+
+Users do not need to mention this file if `AGENTS.md` is loaded.
+
+Use this file when reviewing an existing external agent system and you want a short reminder of the review workflow.
 
 Default mode: review only.
 
@@ -11,7 +15,7 @@ Do not modify the target project unless the user explicitly asks for changes, fi
 ## Minimal Prompt
 
 ```text
-Review <target-project> using REVIEW.md.
+Review <target-project>.
 ```
 
 ## Workflow

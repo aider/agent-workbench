@@ -74,13 +74,15 @@ The reviewer should inventory files, reconstruct the actual flow, identify depen
 
 It does not rewrite by default.
 
-Future review tasks can use the short root entrypoint:
+Primary prompt:
 
 ```text
-Review <target-project> using REVIEW.md.
+Review <target-project>.
 ```
 
-`REVIEW.md` routes to `.claude/agents/agent-flow-reviewer.md` for the full workflow.
+`AGENTS.md` routes review requests to `.claude/agents/agent-flow-reviewer.md`.
+
+`REVIEW.md` is an optional reference entrypoint, not required.
 
 ```text
 Use agent-flow-reviewer.

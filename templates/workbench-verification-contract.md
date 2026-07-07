@@ -56,6 +56,8 @@ existing agent system -> agent-flow-reviewer -> evidence-based improvement plan
 | AC26 | Review artifact checks workbench standards | `agent-flow-reviewer.md` checks external input boundary, support scripts, ad hoc helper code, diagrams, operation-tree profiling, verifier separation, and evidence-based recommendations |
 | AC27 | Review artifact is read-only by default | `agent-flow-reviewer.md` has no write/edit tools and says not to rewrite by default |
 | AC28 | Short review entrypoint exists | `REVIEW.md` exists, points to `agent-flow-reviewer.md`, says review-only by default, says modification requires an explicit request for changes, fixes, refactor, rewrite, or implementation, requires inventory first, and requires flow reconstruction before recommendations |
+| AC29 | Existing-flow review is automatic from repo instructions | `AGENTS.md` routes review requests to `agent-flow-reviewer.md`, says the user does not need to mention `REVIEW.md`, and preserves review-only default behavior |
+| AC30 | README shows the minimal review prompt | `README.md` shows `Review <target-project>.` as the primary prompt and says `REVIEW.md` is optional reference only |
 
 ## Manual checks
 
