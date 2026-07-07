@@ -47,6 +47,43 @@ If an input is missing, <state whether to infer, continue, or ask>.
 3. <step 3>
 4. <step 4>
 
+## Trace logging
+
+For complex or slow-prone workflows, record phase-level trace entries.
+
+Use this rule:
+
+- write `START` before a major phase or expensive operation
+- write `END` after it completes
+- if a run hangs, the last `START` without `END` is the likely stuck point
+
+Trace these phases when relevant:
+
+- discovery
+- planning
+- broad search
+- reading many files
+- writing files
+- running commands
+- verification
+- handoff
+
+Trace format:
+
+```text
+trace_id: <id>
+event: START | END | SKIP | ERROR
+agent: <agent-name>
+phase: <phase-name>
+operation: <operation-name>
+time: <timestamp or step number>
+elapsed_ms: <number or unknown>
+evidence: <file, command, tool, or observation>
+status: running | success | failed | skipped
+```
+
+If exact time is unavailable, use step order and mark elapsed time as unknown.
+
 ## Output format
 
 Return the shortest useful answer.
@@ -86,7 +123,8 @@ Before committing a new agent, check:
 - `name` is unique and lowercase.
 - `description` is specific enough for automatic delegation.
 - tools are limited to what the agent needs.
-- the body has mission, process, output, and boundaries.
+- the body has mission, process, output, trace logging, and boundaries.
 - default output is short and clear.
 - write tools are not granted to review-only agents.
+- complex or slow-prone workflows have phase-level tracing.
 - there is a verifier handoff.
