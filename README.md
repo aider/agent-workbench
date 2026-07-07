@@ -2,7 +2,7 @@
 
 A small workbench for designing generated AI agents without turning global instructions into a wall of hard rules.
 
-The core goal is simple: create focused agents from messy workflows, keep rules small, verify the result, and make non-trivial generated agents observable through operation-tree profiling.
+The core goal is simple: create focused reusable agents from messy workflows, keep variable run values outside agent instructions, show each non-trivial flow as a small diagram, verify the result, and make generated agents observable through operation-tree profiling.
 
 ## Repository layout
 
@@ -20,6 +20,8 @@ templates/
   agent-template.md                            Template for a generated subagent
   concise-output.md                            Default short output format
   flow-architecture.md                         Template for splitting messy workflows
+  generated-agent-config.md                    Template for values supplied outside reusable agents
+  generated-agent-flow-diagram.md             Template for generated-agent block diagrams
   verification-contract.md                     Template for defining done and evidence
   workbench-verification-contract.md           Contract for verifying this workbench
 
@@ -44,10 +46,58 @@ generated agent trace -> agent-flow-profiler
 ## What the workbench does
 
 1. `agent-architect` reads a messy workflow and decides the smallest useful structure.
-2. `agent-writer` creates the actual agent, skill, template, or contract.
-3. Non-trivial generated agents get operation-tree profiling.
-4. `verifier` checks the changed files against evidence.
-5. `agent-flow-profiler` can later analyze the trace from a generated agent.
+2. `agent-architect` owns the generated-agent flow diagram.
+3. `agent-writer` creates the actual agent, skill, template, or contract.
+4. Values that vary by project or run are supplied through config, supporting files, specialized skills, or runtime input.
+5. Non-trivial generated agents get operation-tree profiling.
+6. `verifier` checks the changed files against evidence.
+7. `agent-flow-profiler` can later analyze the trace from a generated agent.
+
+## Configuration boundary
+
+Generated agents should contain reusable behavior, not values that vary by project or run.
+
+Keep inside the agent:
+
+- role
+- workflow logic
+- decision rules
+- tool boundaries
+- input contract
+- output format
+- verification handoff
+- flow diagram shape
+- operation-tree profiling structure
+
+Keep outside the agent:
+
+- variable values
+- lookup terms
+- file locations
+- command strings
+- labels
+- runtime settings
+- reference records
+
+Use `templates/generated-agent-config.md` for the shape of those external inputs.
+
+## Flow diagrams
+
+For every non-trivial generated agent, create a small block diagram.
+
+Use a diagram when the generated agent has more than one meaningful phase, branch, handoff, verification step, or operation-tree trace.
+
+The diagram should show:
+
+- input
+- phases
+- decisions
+- handoffs
+- verification
+- output
+- where operation-tree trace is recorded
+
+Use `templates/generated-agent-flow-diagram.md` as the default shape.
 
 ## Operation-tree profiling
 
@@ -138,6 +188,8 @@ Analyze this trace from a generated agent:
 - Keep global instructions short.
 - Move repeatable procedures into skills.
 - Move role-specific work into subagents.
+- Keep reusable agent logic separate from external inputs.
+- Add a flow diagram to non-trivial generated agents.
 - Add operation-tree profiling to non-trivial generated agents.
 - Keep profiling low-overhead.
 - Keep default output short and clear.
