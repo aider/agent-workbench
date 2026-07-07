@@ -51,6 +51,10 @@ For agent files:
 - tools match the job.
 - read-only agents do not have write/edit tools.
 - body includes mission, process, output, and boundaries.
+- non-trivial generated agents include a flow diagram or explain why no diagram is needed.
+- generated-agent diagrams use generic phase and operation names.
+- non-trivial generated agents include an external input boundary.
+- values that vary by project or run are not embedded in reusable agent instructions.
 - non-trivial generated agents include operation-tree profiling.
 - operation-tree profiling uses `phase -> operation -> optional sub_operation`.
 - every planned operation has a final-state rule: `END`, `SKIP`, or `ERROR`.
@@ -70,6 +74,8 @@ For templates:
 - the template can be filled without guessing hidden requirements.
 - acceptance criteria and evidence are explicit.
 - code fences are not accidentally nested in a way that breaks markdown.
+- generated-agent templates include an external input boundary when relevant.
+- generated-agent templates include a flow diagram when relevant.
 - generated-agent templates include operation-tree profiling when relevant.
 
 ## Output format
