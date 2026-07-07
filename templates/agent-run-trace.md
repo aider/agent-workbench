@@ -53,12 +53,12 @@ op_id: 1
 parent_id: none
 level: phase
 event: PLAN
-agent: project-investigator
+agent: generated-agent
 phase: discovery
-operation: discover project files
+operation: discover configured targets
 time: step-01
 elapsed_ms: unknown
-evidence: planned
+evidence: planned from config
 status: planned
 
 trace_id: run-001
@@ -66,12 +66,12 @@ op_id: 1.1
 parent_id: 1
 level: operation
 event: START
-agent: project-investigator
+agent: generated-agent
 phase: discovery
-operation: scan src files
+operation: read configured target set
 time: step-02
 elapsed_ms: unknown
-evidence: Glob src/**/*.java
+evidence: config target set
 status: running
 
 trace_id: run-001
@@ -79,12 +79,12 @@ op_id: 1.1
 parent_id: 1
 level: operation
 event: END
-agent: project-investigator
+agent: generated-agent
 phase: discovery
-operation: scan src files
+operation: read configured target set
 time: step-03
 elapsed_ms: unknown
-evidence: found 42 files
+evidence: targets loaded
 status: success
 
 trace_id: run-001
@@ -92,19 +92,19 @@ op_id: 2.1
 parent_id: 2
 level: operation
 event: START
-agent: project-investigator
+agent: generated-agent
 phase: analysis
-operation: inspect dependencies
+operation: inspect configured signal group
 time: step-04
 elapsed_ms: unknown
-evidence: Grep Feign|WebClient|RestTemplate
+evidence: configured signal group
 status: running
 ```
 
 If the trace stops here, the likely stuck operation is:
 
 ```text
-project-investigator / analysis / inspect dependencies
+generated-agent / analysis / inspect configured signal group
 ```
 
 ## Required final summary
