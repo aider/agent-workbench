@@ -83,41 +83,26 @@ An operation is a meaningful unit the user may want to debug later, for example:
 
 Do not create operations for tiny internal thoughts or wording choices.
 
-## Required profiling section
+## Section to add to generated agents
 
-Add this section to generated agents:
+Add a section named `Profiling and trace logging` to every non-trivial generated agent.
 
-```markdown
-## Profiling and trace logging
+That section should say:
 
-Use low-overhead operation-tree profiling.
+- use low-overhead operation-tree profiling
+- define the run as `phase -> operation -> optional sub_operation`
+- every planned operation must finish as `END`, `SKIP`, or `ERROR`
+- do not silently drop planned operations
+- record `START` before a major operation begins
+- record `END`, `SKIP`, or `ERROR` when that operation finishes
+- the likely stuck operation is the last `START` without a final state
+- keep trace entries in run notes while working
+- write a compact trace summary at the end
+- write `.agent-runs/<trace-id>.md` only for complex workflows or when the user asks for a trace file
+- do not write trace files after every operation
+- do not log every sentence or minor internal step
 
-At the start of the run, define the operation tree:
-
-```text
-phase -> operation -> optional sub_operation
-```
-
-Each planned operation must end in exactly one final state:
-
-- `END` when it completes
-- `SKIP` when intentionally skipped
-- `ERROR` when it fails
-
-Do not silently drop planned operations.
-
-Record `START` before a major operation begins.
-Record `END`, `SKIP`, or `ERROR` when that operation finishes.
-
-If the run becomes slow or appears stuck, the last `START` without a matching final state is the likely stuck operation.
-
-Keep trace entries in run notes while working.
-Write a compact trace summary at the end.
-Write `.agent-runs/<trace-id>.md` only for complex workflows or when the user asks for a trace file.
-Do not write trace files after every operation.
-Do not log every sentence or minor internal step.
-
-Trace entry format:
+Use this trace entry format:
 
 ```text
 trace_id: <id>
@@ -135,7 +120,6 @@ status: planned | running | success | skipped | failed
 ```
 
 If exact timing is not available, use step order and set `elapsed_ms: unknown`.
-```
 
 ## Required final trace summary
 
