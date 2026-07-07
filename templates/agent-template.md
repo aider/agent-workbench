@@ -49,7 +49,21 @@ If an input is missing, <state whether to infer, continue, or ask>.
 
 ## Trace logging
 
-For complex or slow-prone workflows, record phase-level trace entries.
+Use low-overhead phase tracing for complex or slow-prone workflows.
+
+Rules:
+
+- trace major phases only
+- keep trace entries in run notes while working
+- write one compact trace summary at the end
+- write `.agent-runs/<trace-id>.md` only for complex write-capable agents
+- do not write trace files after every operation
+- do not log every sentence or minor tool call
+
+Target size:
+
+- normal run: 3 to 8 trace entries
+- complex run: 8 to 20 trace entries
 
 Use this rule:
 
@@ -105,6 +119,7 @@ Use longer output only when the task is risky, failed, or needs evidence.
 - <boundary 1>
 - <boundary 2>
 - <boundary 3>
+- Do not make trace logging so detailed that it becomes the bottleneck.
 
 ## Verification handoff
 
@@ -124,6 +139,7 @@ Before committing a new agent, check:
 - `description` is specific enough for automatic delegation.
 - tools are limited to what the agent needs.
 - the body has mission, process, output, trace logging, and boundaries.
+- trace logging is low-overhead.
 - default output is short and clear.
 - write tools are not granted to review-only agents.
 - complex or slow-prone workflows have phase-level tracing.
