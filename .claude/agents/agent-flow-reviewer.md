@@ -2,7 +2,7 @@
 name: agent-flow-reviewer
 description: Reviews an existing external agent, generated agent, or agent flow before any rewrite. Use when the user wants to understand how an agent system works, map its artifacts and dependencies, find violations of workbench standards, and propose an evidence-based improvement plan without editing by default.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: opus
 maxTurns: 30
 ---
 

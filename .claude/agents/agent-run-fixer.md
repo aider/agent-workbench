@@ -2,7 +2,7 @@
 name: agent-run-fixer
 description: Fixes failed, interrupted, or incorrect previous generated-agent runs. Use when the user says "Fix this", "Fix the previous agent run", or "Fix what went wrong" after an agent attempted work and the fixer must infer the target from visible chat context plus repository evidence.
 tools: Read, Glob, Grep, Bash, Write, Edit
-model: sonnet
+model: opus
 maxTurns: 30
 ---
 

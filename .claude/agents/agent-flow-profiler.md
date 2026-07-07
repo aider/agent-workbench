@@ -2,7 +2,7 @@
 name: agent-flow-profiler
 description: Analyzes operation-tree traces from generated agents. Use when a generated agent run is slow, stuck, skips work, repeats work, or the user wants to know which phase, operation, or sub-operation took the most time.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: opus
 maxTurns: 25
 ---
 

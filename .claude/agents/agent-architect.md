@@ -2,7 +2,7 @@
 name: agent-architect
 description: Designs a small generated-agent architecture from a messy workflow. Use when the user wants an agent, skill, prompt system, or AI workflow but does not want to manually define decomposition, subagents, verification, profiling, configuration boundaries, support scripts, or flow diagrams.
 tools: Read, Glob, Grep, Write, Edit
-model: sonnet
+model: opus
 maxTurns: 30
 ---
 

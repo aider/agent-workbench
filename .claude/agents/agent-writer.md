@@ -2,7 +2,7 @@
 name: agent-writer
 description: Writes or refactors a specific Claude Code subagent, skill, template, support script, or verification contract after the architecture is known. Use when the user or agent-architect has already decided what artifact should be created or changed. If the user gives a messy workflow and expects the agent to decide how to split it, use agent-architect first.
 tools: Read, Glob, Grep, Write, Edit
-model: sonnet
+model: opus
 maxTurns: 20
 ---
 

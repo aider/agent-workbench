@@ -2,7 +2,7 @@
 name: verifier
 description: Verifies agent, skill, prompt, documentation, or code changes against an explicit contract. Use after files are changed, before calling work done, or when the user asks whether an agent actually followed instructions.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: opus
 maxTurns: 20
 ---
 
