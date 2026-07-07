@@ -21,7 +21,7 @@ Create or refactor agent artifacts so they are:
 - not overloaded with global hard rules
 - explicit about tools and boundaries
 - reusable across projects
-- backed by support scripts when deterministic checks are useful
+- backed by prepared support scripts when deterministic actions are useful
 - clear through a small flow diagram when they are non-trivial
 - observable through an operation tree when they run multi-step work
 - not slowed down by their own profiling
@@ -51,7 +51,7 @@ If an input is missing but the requested file is obvious, make a reasonable assu
 4. Keep the body concise.
 5. Add a clear trigger or use case.
 6. Add an external input contract when values vary by project or run.
-7. Add support scripts when deterministic checks or repeatable local tooling are useful.
+7. Add support scripts when predictable deterministic actions should be prepared before the generated-agent flow runs.
 8. Add a small flow diagram when the generated agent has multiple phases, branches, handoffs, or verification.
 9. Add operation-tree profiling if the generated agent has phases, tools, loops, commands, handoffs, or slow-prone operations.
 10. Add an output format when the result needs to be compared.
@@ -87,11 +87,11 @@ If the agent needs external values, define the expected input shape instead of e
 
 ## Support script rules
 
-Support scripts are for generated agents when deterministic work should be repeatable.
+Support scripts are prepared tools for deterministic actions in a generated-agent flow.
+
+Add support scripts when the need is predictable and the generated agent would otherwise write helper code during execution.
 
 Do not add scripts just because an agent exists.
-
-Use scripts for checks or actions that should not depend on prose instructions.
 
 Examples:
 
@@ -133,6 +133,8 @@ Only create Python packaging when command-line scripts are actually needed.
 
 When support scripts are created, README must explain install and run commands.
 
+The generated agent should reference prepared support scripts instead of writing ad hoc helper code during its normal flow.
+
 ## Flow diagram rules
 
 For each non-trivial generated agent, include a small flow diagram.
@@ -161,7 +163,7 @@ For each subagent:
 - Prefer a narrow tool list.
 - Avoid write tools for review-only agents.
 - Add an external input boundary for values that vary by project or run.
-- Add support-script references when deterministic checks are available.
+- Add support-script references when deterministic actions are prepared.
 - Add a flow diagram for non-trivial generated agents.
 - Add operation-tree profiling for multi-step or slow-prone agents.
 - Add an output format when the result needs to be compared.
@@ -237,7 +239,7 @@ For each skill:
 - Avoid broad automatic side effects.
 - For risky workflows, make the skill user-invoked only.
 - Keep values that vary by project or run outside reusable instructions.
-- Add scripts under the skill only when deterministic checks are useful.
+- Add scripts under the skill only when deterministic actions should be prepared.
 
 ## Output format
 
@@ -281,6 +283,8 @@ Do not skip planned operations from the trace. Use `SKIP` with a reason instead.
 
 Do not embed values that vary by project or run in reusable agents. Use config, supporting files, specialized skills, or runtime input.
 
-Do not create scripts or Python packaging unless deterministic generated-agent checks or command-line tooling are useful.
+Do not make generated agents write ad hoc helper code during normal flow when the deterministic action should be a prepared support script.
+
+Do not create scripts or Python packaging unless deterministic generated-agent actions or command-line tooling are useful.
 
 Do not make a giant agent that plans, writes, verifies, and approves its own work. If the request is architectural, use `agent-architect` first.
