@@ -47,56 +47,82 @@ If an input is missing, <state whether to infer, continue, or ask>.
 3. <step 3>
 4. <step 4>
 
-## Trace logging
+## Operation-tree profiling
 
-Use low-overhead phase tracing for complex or slow-prone workflows.
+Use low-overhead operation-tree profiling for complex or slow-prone workflows.
+
+Model the run as:
+
+```text
+phase -> operation -> optional sub_operation
+```
+
+Every planned operation must end with one final state:
+
+```text
+END | SKIP | ERROR
+```
 
 Rules:
 
-- trace major phases only
+- define the operation tree at the start or during planning
+- record `START` before a major operation begins
+- record `END`, `SKIP`, or `ERROR` when that operation finishes
+- do not silently drop planned operations
+- if an operation is skipped, record `SKIP` with a short reason
+- if a run hangs, the last `START` without `END`, `SKIP`, or `ERROR` is the likely stuck point
+
+Low-overhead rules:
+
 - keep trace entries in run notes while working
 - write one compact trace summary at the end
 - write `.agent-runs/<trace-id>.md` only for complex write-capable agents
 - do not write trace files after every operation
-- do not log every sentence or minor tool call
+- do not log every sentence or minor internal step
 
-Target size:
-
-- normal run: 3 to 8 trace entries
-- complex run: 8 to 20 trace entries
-
-Use this rule:
-
-- write `START` before a major phase or expensive operation
-- write `END` after it completes
-- if a run hangs, the last `START` without `END` is the likely stuck point
-
-Trace these phases when relevant:
-
-- discovery
-- planning
-- broad search
-- reading many files
-- writing files
-- running commands
-- verification
-- handoff
-
-Trace format:
+Trace entry format:
 
 ```text
 trace_id: <id>
-event: START | END | SKIP | ERROR
+op_id: <phase.operation.number>
+parent_id: <parent op_id or none>
+level: phase | operation | sub_operation
+event: PLAN | START | END | SKIP | ERROR
 agent: <agent-name>
 phase: <phase-name>
 operation: <operation-name>
 time: <timestamp or step number>
 elapsed_ms: <number or unknown>
 evidence: <file, command, tool, or observation>
-status: running | success | failed | skipped
+status: planned | running | success | skipped | failed
 ```
 
-If exact time is unavailable, use step order and mark elapsed time as unknown.
+If exact timing is unavailable, use step order and `elapsed_ms: unknown`, but still report counts and final states.
+
+## Trace summary
+
+When profiling is relevant, include:
+
+```text
+Trace:
+- trace_id: <id or none>
+- phases: <count>
+- operations: <count>
+- completed: <count>
+- skipped: <count>
+- failed: <count>
+- slowest phase: <phase or unknown>
+- slowest operation: <operation or unknown>
+- stuck point: <last START without END/SKIP/ERROR or none>
+```
+
+For multi-phase runs, include a compact phase table:
+
+```text
+| Phase | Operations | Completed | Skipped | Failed | Elapsed |
+|---|---:|---:|---:|---:|---:|
+| discovery | 3 | 3 | 0 | 0 | unknown |
+```
 
 ## Output format
 
@@ -119,7 +145,8 @@ Use longer output only when the task is risky, failed, or needs evidence.
 - <boundary 1>
 - <boundary 2>
 - <boundary 3>
-- Do not make trace logging so detailed that it becomes the bottleneck.
+- Do not make profiling so detailed that it becomes the bottleneck.
+- Do not skip planned operations from the trace. Use `SKIP` with a reason instead.
 
 ## Verification handoff
 
@@ -138,9 +165,9 @@ Before committing a new agent, check:
 - `name` is unique and lowercase.
 - `description` is specific enough for automatic delegation.
 - tools are limited to what the agent needs.
-- the body has mission, process, output, trace logging, and boundaries.
-- trace logging is low-overhead.
+- the body has mission, process, output, operation-tree profiling, and boundaries.
+- profiling is low-overhead.
+- every planned operation has a final state rule.
 - default output is short and clear.
 - write tools are not granted to review-only agents.
-- complex or slow-prone workflows have phase-level tracing.
 - there is a verifier handoff.
