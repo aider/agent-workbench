@@ -21,7 +21,7 @@ Turn a messy workflow into maintainable generated agents with:
 - explicit verification
 - short output
 - reusable logic separated from external inputs
-- support scripts for deterministic generated-agent checks when useful
+- prepared support scripts for deterministic actions when useful
 - flow diagrams for non-trivial generated agents
 - operation-tree profiling for non-trivial generated agents
 
@@ -55,7 +55,7 @@ Use a verification contract when the result must be checked against evidence.
 
 Use a config file, supporting file, specialized skill, or runtime input when values vary by project or run.
 
-Use a support script when the generated agent needs deterministic checks or repeatable local tooling.
+Use a support script when the generated agent needs a deterministic action that should already exist before the normal flow runs.
 
 ## External input boundary
 
@@ -82,7 +82,9 @@ If the generated agent needs external values, define the expected input shape in
 
 ## Support script rule
 
-Add support scripts only when the generated agent has deterministic work that should be repeatable.
+Support scripts are prepared tools for deterministic actions in a generated-agent flow.
+
+Add support scripts when the need is predictable and the generated agent would otherwise write helper code during execution.
 
 Examples:
 
@@ -221,7 +223,7 @@ Next:
 1. Identify the real failure pattern.
 2. Decide the smallest set of artifacts.
 3. Decide the external input boundary.
-4. Decide whether generated-agent support scripts are needed.
+4. Decide whether prepared support scripts are needed to avoid ad hoc helper code during the generated-agent flow.
 5. Decide whether a generated-agent flow diagram is needed.
 6. Decide whether generated-agent operation-tree profiling is needed.
 7. Create or update files.
