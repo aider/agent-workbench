@@ -1,0 +1,8 @@
+Proceed with the systemic end-to-end pipeline fix. Do not stop after Stage 1 and do not substitute manual investigation for pipeline behavior.
+First verify that the upstream fix preventing this supported CloudWatch alarm from falling into NEEDS_AI is actually implemented. If it is not, implement it.
+Implement generic parser support for the 110161/payinfour log shapes so the structured event fields are populated.
+Fix canonical service binding between payinfour-account-blue and payinfour through configuration/catalog metadata, not incident-specific hardcoding.
+Expand deterministic retrieval to the correlated GBP/API Gateway and Kafka evidence required for GBP-PST-1002 and LoanTransactionPublish.
+Update rendering only after the evidence is parsed and bound.
+Add unit and end-to-end regression tests.
+Acceptance criteria: rerun this fixture from a clean state; it must not enter NEEDS_AI, the records must no longer all be parse_status=UNKNOWN, facts must be non-zero, and the expected cross-service evidence must be retrieved and rendered automatically. Do not hardcode this transaction ID or copy manual evidence into the result. Run the complete relevant test suite and report changed files and test results
