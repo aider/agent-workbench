@@ -1,8 +1,69 @@
-Proceed with the systemic end-to-end pipeline fix. Do not stop after Stage 1 and do not substitute manual investigation for pipeline behavior.
-First verify that the upstream fix preventing this supported CloudWatch alarm from falling into NEEDS_AI is actually implemented. If it is not, implement it.
-Implement generic parser support for the 110161/payinfour log shapes so the structured event fields are populated.
-Fix canonical service binding between payinfour-account-blue and payinfour through configuration/catalog metadata, not incident-specific hardcoding.
-Expand deterministic retrieval to the correlated GBP/API Gateway and Kafka evidence required for GBP-PST-1002 and LoanTransactionPublish.
-Update rendering only after the evidence is parsed and bound.
-Add unit and end-to-end regression tests.
-Acceptance criteria: rerun this fixture from a clean state; it must not enter NEEDS_AI, the records must no longer all be parse_status=UNKNOWN, facts must be non-zero, and the expected cross-service evidence must be retrieved and rendered automatically. Do not hardcode this transaction ID or copy manual evidence into the result. Run the complete relevant test suite and report changed files and test results
+# 2026 SELF-EVALUATION
+
+## WHAT YOU ACHIEVED
+
+### 1. Reusable Idempotency Sidecar PoC
+
+Developed a reusable idempotency sidecar PoC that could be integrated with different services through configuration. Evaluated the approach using Loan Setup, assessing retry behavior and the risk of duplicate operations while demonstrating minimal latency overhead under load.
+
+### 2. Control Plane Integration and Cross-Team Contributions
+
+Implemented Loan Setup's integration with Control Plane, including the configuration schema. Extended the work beyond our team's codebase by fixing a startup defect directly in Control Plane's configuration loader. The integration enabled configuration updates in DEV without redeploying Loan Setup.
+
+### 3. SafePay Integration
+
+Implemented SafePay integration changes in Loan Setup, supporting key payment operations and installment plan details while maintaining backward compatibility. Added transaction identifiers needed for future settlement reconciliation and identified two API contract defects before release.
+
+### 4. Platform Modernization and Reliability
+
+Photon Lambda Migration — Migrated Pay-in-4 orchestration Lambda functions to Photon Lambda and deployed the changes to production, resolving issues during the transition.
+
+Infrastructure Cost Optimization — Right-sized non-production Aurora resources and removed an unused replica to reduce infrastructure costs.
+
+Gremlin Integration and Resiliency Testing — Integrated and configured Gremlin for resiliency testing, enabling CPU stress and latency fault-injection scenarios to evaluate application behavior under degraded conditions.
+
+### 5. AI Agents and Shared Engineering Tools
+
+Production Support Agent — Developed and delivered an agent now used by the team to automate GBP posting failure investigations and reporting. Replaced a nine-step manual process with a single-command workflow that collects and reconciles production data, identifies affected loans, and prepares reports for engineer review while preserving existing security controls.
+
+QAC2 Validation Agent — Separately designed and built an end-to-end AI-driven validation workflow. Automated application login and loan creation through the UI, covered simulation testing, and integrated Log-lens to investigate failures and generate reports with root-cause analysis, impact assessments, team contacts, and recommended next steps. Completed the implementation and submitted it for review.
+
+CCB Skills Contributions — Developed Snow Lite, AWS CLI, and Sophia SSH skills and contributed them to the shared CCB Skills library. Maintained the skills as underlying systems evolved. All three were subsequently used by other engineers in the development of Log-lens and RSA agents.
+
+### 6. PVT Automation
+
+Drove PVT automation to completion for post-deployment performance and acceptance testing. Identified automation opportunities, contributed to backlog planning, and worked with the platform team to address dependencies. Automated execution of performance and acceptance tests, as well as performance test reporting, reducing manual release-validation effort. Shared reusable approaches with other engineers.
+
+### Opportunities for Development — What
+
+- Measure the impact of engineering automation through team adoption and time saved.
+
+- Use team feedback to guide broader adoption and continued improvements.
+
+## HOW YOU ACHIEVED IT
+
+### Work as One — Cross-Team Collaboration
+
+Identified a blocker for post-deployment testing, submitted a feature request, and worked with the platform team, which delivered a solution. Also prepared technical stories for backlog refinement.
+
+### Work as One — Engineering Knowledge Sharing
+
+Presented the CCB skills to colleagues, shared their capabilities and practical applications, and supported knowledge sharing across engineering teams.
+
+### Improve Relentlessly — Initiative and Innovation
+
+Proactively identified opportunities to reduce repetitive work and explored practical automation approaches, including building an Incident Investigator prototype during an internal AI hackathon.
+
+### Do the Right Thing — Quality and Risk Management
+
+Designed production support automation around existing access controls and engineer review, improving efficiency without bypassing established safeguards.
+
+### Earn Trust — Ownership and Communication
+
+Drove cross-team efforts to investigate and reduce recurring production alert noise, identifying responsible teams and following through on remediation. This effort helped resolve four of five tracked recurring alert issues while preserving actionable production monitoring.
+
+### Opportunities for Development — How
+
+- Build on existing knowledge-sharing efforts by presenting reusable engineering approaches to a broader technical audience.
+
+- Engage other teams earlier on technical decisions and dependencies.
