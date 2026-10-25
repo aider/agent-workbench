@@ -12,7 +12,7 @@ Implemented Loan Setup's integration with Control Plane, including the configura
 
 ### 3. SafePay Integration
 
-Implemented SafePay integration changes in Loan Setup, supporting key payment operations and installment plan details while maintaining backward compatibility. Added transaction identifiers needed for future settlement reconciliation and identified two API contract defects before release.
+Implemented Loan Setup changes to support updated SafePay API contracts across authorization, reversal, and funding flows. Updated request and response handling for transaction identifiers and installment plan details, and identified two API contract defects before release.
 
 ### 4. Platform Modernization and Reliability
 
