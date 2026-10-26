@@ -1,25 +1,19 @@
-# 2026 Objectives — Progress Comments
+Review my 2026 Jira tickets, pull requests, and code contributions related to Loan Setup, SafePay, GBP, Eligibility, and settlement workflows.
 
-## 1. Deliver Critical Projects — Loan Setup
+I want to identify significant accomplishments that may be missing from my **Deliver Critical Projects** objective comment.
 
-Implemented SafePay API contract changes and improved retry handling for Loan Setup. Validated integrations with GBP and Eligibility in UAT and collaborated with the team on settlement issues, while continuing production-readiness work.
+Focus on:
+- Features and integrations I personally implemented.
+- Complex technical problems I resolved.
+- Improvements to reliability, retry handling, and integration readiness.
+- Meaningful outcomes for the project.
 
-## 2. Improving Our PXT Productivity
+Distinguish my individual contributions from team efforts and issues that remain blocked by upstream dependencies.
 
-Automated post-deployment performance and acceptance testing, including performance test reporting, to reduce manual validation effort and improve release efficiency. Worked with the platform team to address automation dependencies.
+Do not exaggerate results, claim incomplete work was delivered, or turn routine development tasks into major accomplishments.
 
-## 3. Harness the Power of AI
+Identify the 3–5 strongest candidates, with supporting Jira tickets or PRs. Explain their impact in plain business-oriented English.
 
-Developed an AI-powered GBP investigation agent now used by the team and a QAC2 Validation Agent for automated testing and failure investigation. These solutions help reduce repetitive engineering work and improve operational efficiency.
+Then recommend whether my existing objective comment needs improvement. If it is already sufficient, say so.
 
-## 4. Accelerating Impact with AI, Scale, and Security
-
-Contributed to platform reliability and security through Photon Lambda migration, resiliency testing, and production support automation designed around existing access controls. Also optimized non-production Aurora resources to reduce infrastructure costs.
-
-## 5. Discover. Reuse. Automate.
-
-Developed and maintained Snow Lite, AWS CLI, and Sophia SSH skills in the shared CCB Skills library. Shared these tools with colleagues, and they were subsequently used in the development of other engineering agents.
-
-## 6. AI as a Force Multiplier
-
-Used AI tools in day-to-day software development, testing, and troubleshooting to improve productivity and reduce repetitive work. Developed AI-driven solutions for production support and automated testing. Also created and shared Snow Lite, AWS CLI, and Sophia SSH skills, demonstrated their capabilities to colleagues, and helped other engineers adopt AI-powered automation in their workflows.
+**Do not modify any files yet. Show me your findings and a concise proposed comment for review.**
