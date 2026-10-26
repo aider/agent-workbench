@@ -1,3 +1,25 @@
-AI as a Force Multiplier
+# 2026 Objectives — Progress Comments
+
+## 1. Deliver Critical Projects — Loan Setup
+
+Implemented SafePay API contract changes and Control Plane integration for Loan Setup, supporting partner integration and UAT readiness. Continued addressing technical dependencies and preparing for the production release.
+
+## 2. Improving Our PXT Productivity
+
+Automated post-deployment performance and acceptance testing, including performance test reporting, to reduce manual validation effort and improve release efficiency. Worked with the platform team to address automation dependencies.
+
+## 3. Harness the Power of AI
+
+Developed an AI-powered GBP investigation agent now used by the team and a QAC2 Validation Agent for automated testing and failure investigation. These solutions help reduce repetitive engineering work and improve operational efficiency.
+
+## 4. Accelerating Impact with AI, Scale, and Security
+
+Contributed to platform reliability and security through Photon Lambda migration, resiliency testing, and production support automation designed around existing access controls. Also optimized non-production Aurora resources to reduce infrastructure costs.
+
+## 5. Discover. Reuse. Automate.
+
+Developed and maintained Snow Lite, AWS CLI, and Sophia SSH skills in the shared CCB Skills library. Shared these tools with colleagues, and they were subsequently used in the development of other engineering agents.
+
+## 6. AI as a Force Multiplier
 
 Used AI tools in day-to-day software development, testing, and troubleshooting to improve productivity and reduce repetitive work. Developed AI-driven solutions for production support and automated testing. Also created and shared Snow Lite, AWS CLI, and Sophia SSH skills, demonstrated their capabilities to colleagues, and helped other engineers adopt AI-powered automation in their workflows.
