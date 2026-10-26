@@ -2,7 +2,7 @@
 
 ## 1. Deliver Critical Projects — Loan Setup
 
-Implemented SafePay API contract changes and improved retry handling for Loan Setup. Validated key integrations with GBP and Eligibility in UAT, identified a breaking upstream API contract change that blocked full settlement, and raised it for a scope decision while continuing production-readiness work.
+Implemented SafePay API contract changes and improved retry handling for Loan Setup. Validated integrations with GBP and Eligibility in UAT and collaborated with the team on settlement issues, while continuing production-readiness work.
 
 ## 2. Improving Our PXT Productivity
 
