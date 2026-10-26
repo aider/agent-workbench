@@ -1,9 +1,3 @@
-Update the QAC2 Validation Agent accomplishment in `self-evaluation-gpt.md` to emphasize that **I developed the agent**, rather than its PR or merge status.
+AI as a Force Multiplier
 
-Use this wording:
-
-"Developed the QAC2 Validation Agent to automate end-to-end testing and failure investigation."
-
-Keep the relevant details about its capabilities, but avoid unnecessary technical details, GitHub terminology, or claims about team adoption. Keep the wording concise, professional, and suitable for a year-end self-evaluation.
-
-Do not modify any other accomplishments or sections.
+Used AI tools in day-to-day software development, testing, and troubleshooting to improve productivity and reduce repetitive work. Developed AI-driven solutions for production support and automated testing. Also created and shared Snow Lite, AWS CLI, and Sophia SSH skills, demonstrated their capabilities to colleagues, and helped other engineers adopt AI-powered automation in their workflows.
